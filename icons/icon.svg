@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#1c1440"/>
+      <stop offset="100%" stop-color="#070514"/>
+    </radialGradient>
+    <radialGradient id="hole" cx="50%" cy="50%" r="50%">
+      <stop offset="58%" stop-color="#000000"/>
+      <stop offset="66%" stop-color="#3a1c08"/>
+      <stop offset="74%" stop-color="#ff8a2a"/>
+      <stop offset="82%" stop-color="#ffd95c"/>
+      <stop offset="90%" stop-color="#ff8a2a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ff8a2a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="star" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff8dc"/>
+      <stop offset="60%" stop-color="#ffd95c"/>
+      <stop offset="100%" stop-color="#ffb02e"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  <!-- stars -->
+  <g fill="#cfd8ff">
+    <circle cx="80" cy="90" r="4"/><circle cx="430" cy="70" r="3"/><circle cx="470" cy="180" r="4"/>
+    <circle cx="60" cy="300" r="3"/><circle cx="120" cy="430" r="4"/><circle cx="400" cy="440" r="3"/>
+    <circle cx="200" cy="60" r="3"/><circle cx="330" cy="120" r="2.5"/><circle cx="50" cy="180" r="2.5"/>
+  </g>
+  <!-- the supermassive black hole, ringed in fire -->
+  <ellipse cx="340" cy="160" rx="120" ry="120" fill="url(#hole)"/>
+  <ellipse cx="340" cy="160" rx="64" ry="64" fill="#000"/>
+  <ellipse cx="340" cy="160" rx="118" ry="26" fill="none" stroke="#ffb86a" stroke-width="10" opacity="0.85"/>
+  <!-- Luma, riding the light-river -->
+  <g transform="translate(170,330)">
+    <path d="M0,-86 L24,-26 L88,-22 L38,18 L54,80 L0,46 L-54,80 L-38,18 L-88,-22 L-24,-26 Z" fill="url(#star)"/>
+    <circle cx="-18" cy="-12" r="9" fill="#10141f"/>
+    <circle cx="18" cy="-12" r="9" fill="#10141f"/>
+    <circle cx="-15" cy="-15" r="3" fill="#fff"/>
+    <circle cx="21" cy="-15" r="3" fill="#fff"/>
+    <path d="M-16,14 Q0,30 16,14" fill="none" stroke="#10141f" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="-30" cy="4" r="7" fill="#ff9a7a" opacity="0.7"/>
+    <circle cx="30" cy="4" r="7" fill="#ff9a7a" opacity="0.7"/>
+  </g>
+  <!-- light-river swoosh -->
+  <path d="M40,420 Q170,360 300,400 T490,340" fill="none" stroke="#5ce8ff" stroke-width="14" stroke-linecap="round" opacity="0.8"/>
+  <path d="M60,450 Q190,395 320,430 T500,375" fill="none" stroke="#8a5cff" stroke-width="8" stroke-linecap="round" opacity="0.6"/>
+</svg>

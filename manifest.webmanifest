@@ -1,0 +1,15 @@
+{
+  "name": "Mission: Starlight 5 — The Lighthouse at the Edge of Time",
+  "short_name": "Starlight 5",
+  "description": "Race across the galaxy near light-speed, navigate by a pulsar, and unite advanced civilizations to deflect a killer beam and save the Earth.",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#070514",
+  "theme_color": "#070514",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
