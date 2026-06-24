@@ -684,6 +684,87 @@ export function makeAlien(kind) {
   return g;
 }
 
+/** A tall, elegant Architect alien — robed, glowing, ancient. */
+export function makeArchitect() {
+  const g = new THREE.Group();
+  const robe = new THREE.Mesh(
+    new THREE.ConeGeometry(0.55, 1.7, 10),
+    new THREE.MeshStandardMaterial({ color: 0x5a4a8e, roughness: 0.5, emissive: 0x2a2050, emissiveIntensity: 0.6, flatShading: true })
+  );
+  robe.position.y = 0.85;
+  g.add(robe);
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.3, 16, 12),
+    new THREE.MeshStandardMaterial({ color: 0xbfa8ff, roughness: 0.4, emissive: 0x6a4ad0, emissiveIntensity: 0.7 })
+  );
+  head.position.y = 1.9;
+  head.add(eye(-0.1, 0.04, 0.24), eye(0.1, 0.04, 0.24));
+  g.add(head);
+  for (let i = 0; i < 3; i++) {
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(0.4 + i * 0.12, 0.02, 8, 28),
+      new THREE.MeshStandardMaterial({ color: 0xffe07a, emissive: 0xffd95c, emissiveIntensity: 2 })
+    );
+    ring.position.y = 2.3 + i * 0.05;
+    ring.rotation.x = Math.PI / 2;
+    g.add(ring);
+  }
+  g.add(makeGlowSprite(0x9a7aff, 2.4).translateY(1.4));
+  g.userData.bobs = true;
+  return g;
+}
+
+/** A friendly robot of the Machine Mind — chrome body, glowing eye-bar. */
+export function makeRobot(scale = 1) {
+  const g = new THREE.Group();
+  const chrome = new THREE.MeshStandardMaterial({ color: 0xb8c2d8, roughness: 0.25, metalness: 0.85 });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.34, 0.7, 6, 12), chrome);
+  body.position.y = 0.8;
+  g.add(body);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4, 0.5), chrome);
+  head.position.y = 1.5;
+  g.add(head);
+  const eyebar = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.1, 0.05),
+    new THREE.MeshStandardMaterial({ color: 0x5ce8ff, emissive: 0x5ce8ff, emissiveIntensity: 3 })
+  );
+  eyebar.position.set(0, 1.52, 0.26);
+  g.add(eyebar);
+  for (const side of [-1, 1]) {
+    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.5, 4, 8), chrome);
+    arm.position.set(side * 0.46, 0.85, 0);
+    arm.rotation.z = side * 0.3;
+    g.add(arm);
+  }
+  g.add(makeGlowSprite(0x5ce8ff, 1.6).translateY(1.2));
+  g.scale.setScalar(scale);
+  g.userData.eyebar = eyebar;
+  g.userData.bobs = true;
+  return g;
+}
+
+/** A human kid (classmate / the cadet on Earth) — simple, friendly. */
+export function makeKid(shirt = 0x5ce8ff) {
+  const g = new THREE.Group();
+  const skin = new THREE.MeshStandardMaterial({ color: 0xf0c8a0, roughness: 0.7 });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.5, 4, 10), new THREE.MeshStandardMaterial({ color: shirt, roughness: 0.7 }));
+  body.position.y = 0.62;
+  g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 16, 12), skin);
+  head.position.y = 1.2;
+  head.add(eye(-0.1, 0.03, 0.22), eye(0.1, 0.03, 0.22));
+  g.add(head);
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x4a3020, roughness: 1 }));
+  hair.position.y = 1.26;
+  g.add(hair);
+  for (const side of [-1, 1]) {
+    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.09, 0.34, 3, 6), new THREE.MeshStandardMaterial({ color: 0x35507a }));
+    leg.position.set(side * 0.12, 0.18, 0);
+    g.add(leg);
+  }
+  return g;
+}
+
 /** Rusty — a lonely little Mars rover: boxy body, six wheels, camera mast, panels. */
 export function makeRover() {
   const r = new THREE.Group();
@@ -801,7 +882,8 @@ export function makeLighthouse(height = 7) {
 
 const GROUND_KEYS = { planet9: 'planet9', proxima: 'proxima', trappist: 'trappist', cancri: 'cancri', pulsar: 'station', finale: 'nebula', blackhole: 'station',
   veyra: 'veyra', observatory: 'station', spaceport: 'station', harbor: 'harbor', race: 'station',
-  marsred: 'marsred', marscanyon: 'marsred', marspolar: 'marsred', marsalive: 'meadow' };
+  marsred: 'marsred', marscanyon: 'marsred', marspolar: 'marsred', marsalive: 'meadow',
+  pulsarsky: 'station', architect: 'station', dyson: 'station', machine: 'station', school: 'meadow' };
 
 export function makeGround(key, size = 60) {
   const geo = new THREE.PlaneGeometry(size, size, 48, 48);

@@ -21,10 +21,57 @@ export const TOPIC_NAMES = {
   killerstar: 'Stars That Kill',
   mars: 'The Red Planet',
   keystone: 'The Keystone',
+  earth: 'Planet Earth',
+  timewarp: 'Light & Time',
+  dyson: 'Megastructures',
+  machine: 'Minds & Machines',
   general: 'Space Explorer'
 };
 
 export const SCIENCE_BANK = [
+  // --- Earth (game 5) ---
+  sq('earth-blue', 'earth', 'Why does Earth look blue from space?', 'It is mostly covered in ocean water', ['The sky paints it', 'It is made of blueberries', 'It is very cold'],
+    'About 70% of Earth is ocean, so from space our world shines bright blue — the "pale blue dot."'),
+  sq('earth-special', 'earth', 'What makes Earth special among the planets we know?', 'It has liquid water, air, and life', ['It is the biggest', 'It has the most moons', 'It is closest to the Sun'],
+    'Earth is the only world we know with oceans, breathable air, AND life. So far, it is one of a kind!'),
+  sq('earth-shield', 'earth', 'What protects Earth\'s air and water from the solar wind?', 'Its magnetic shield', ['A force field machine', 'The Moon', 'Tall mountains'],
+    'Earth\'s spinning iron core makes a magnetic shield that deflects the solar wind — the very thing Mars lost long ago.'),
+  sq('earth-home', 'earth', 'Why is it worth racing the whole galaxy to save Earth?', 'It is the only home we have', ['It has good pizza', 'It is shiny', 'There is nothing better to do'],
+    'Earth is our one and only home — every person, animal, and plant we know lives here. That is worth saving!'),
+
+  // --- Light & Time / time dilation (game 5) ---
+  sq('time-fast', 'timewarp', 'What happens to your clock when you fly close to the speed of light?', 'It ticks slower than clocks back home', ['It ticks faster', 'It stops forever', 'It melts'],
+    'The faster you go, the slower your clock runs compared to home. This is REAL — scientists call it time dilation!'),
+  sq('time-trip', 'timewarp', 'You take a fast star-trip that feels like a week. Back on Earth, how much time might pass?', 'Many years', ['Exactly one week', 'One minute', 'No time at all'],
+    'Near light-speed, a week for you can be years for Earth. Astronauts on the Space Station already age a tiny bit slower than us!'),
+  sq('time-limit', 'timewarp', 'What is the fastest anything can travel in the universe?', 'The speed of light', ['The speed of sound', 'The speed of a rocket', 'The speed of a sneeze'],
+    'Light is the cosmic speed limit — about 300,000 km every second. Nothing with mass can quite reach it.'),
+  sq('time-why', 'timewarp', 'Why does flying near light-speed help cross the huge galaxy in one lifetime?', 'Time slows for the traveler, so the trip feels short', ['The galaxy shrinks for fun', 'You skip lunch', 'Stars push you faster'],
+    'Because your own clock slows, a journey of thousands of light-years can feel like just years to YOU. Time itself helps you travel!'),
+
+  // --- Pulsars (recap + new, game 5) ---
+  sq('pulsar-what2', 'pulsar', 'What is a pulsar?', 'A tiny spinning neutron star that flashes a beam', ['A kind of planet', 'A comet', 'A space station'],
+    'A pulsar is the crushed, spinning heart left behind by a giant star. It sweeps a beam around like a lighthouse.'),
+  sq('pulsar-clock', 'pulsar', 'Why are pulsars called the universe\'s best clocks?', 'They flash with incredibly steady rhythm', ['They have tiny hands', 'They ring like bells', 'They glow gold'],
+    'A pulsar\'s spin is so steady that its flashes keep better time than almost any clock on Earth — perfect for navigation!'),
+  sq('pulsar-dense', 'pulsar', 'How dense is a neutron star?', 'A spoonful would weigh as much as a mountain', ['Light as a feather', 'Like a balloon', 'Like water'],
+    'Neutron stars are unbelievably dense — one teaspoon would weigh billions of tons. The star\'s whole mass squeezed into a city-sized ball!'),
+
+  // --- Megastructures / Dyson Spheres (game 5) ---
+  sq('dyson-what', 'dyson', 'What is a Dyson Sphere?', 'A giant shell built around a star to capture its energy', ['A bouncy ball for aliens', 'A kind of moon', 'A spaceship engine'],
+    'A Dyson Sphere is a megastructure that wraps a whole star to drink up ALL its energy — a real idea dreamed up by scientist Freeman Dyson.'),
+  sq('dyson-why', 'dyson', 'Why would a civilization build a Dyson Sphere?', 'To collect enormous amounts of power', ['To hide the star', 'To keep the star warm', 'To make the star spin'],
+    'A star pours out unimaginable energy. Catching even part of it could power a whole civilization\'s greatest machines.'),
+  sq('dyson-energy', 'dyson', 'Where do stars get their incredible energy?', 'From fusing atoms together in their cores', ['From burning wood', 'From batteries', 'From sunlight'],
+    'Deep in a star, atoms are squeezed so hard they fuse and release huge energy — the same power that lights our Sun.'),
+
+  // --- Minds & Machines / AI (game 5) ---
+  sq('ai-what', 'machine', 'What is an artificial intelligence (AI)?', 'A machine that can think and solve problems', ['A robot that only dances', 'A kind of star', 'A magic spell'],
+    'An AI is a machine that can learn, reason, and solve problems — like a very clever computer brain.'),
+  sq('ai-good', 'machine', 'What is the Machine Mind especially good at?', 'Doing enormous calculations perfectly', ['Taking naps', 'Eating snacks', 'Getting lost'],
+    'The Machine Mind can crunch numbers no person could — perfect for aiming a galaxy-sized deflector down to the last hair.'),
+  sq('ai-patient', 'machine', 'How has the Machine Mind watched stars be born and die?', 'It has lived for an enormous span of time', ['It has a time machine', 'It dreams it', 'It reads about it'],
+    'The Machine Mind is ancient — it has existed so long it has watched whole stars form and fade. It understands deep time.'),
   // --- Mars: the Red Planet (game 4) ---
   sq('mars-red', 'mars', 'Why is Mars called the Red Planet?', 'It is covered in rusty red dust', ['It is very hot', 'It is made of ketchup', 'It glows like fire'],
     'Mars is red because its dust is full of iron that rusted — the whole planet is covered in rust!'),

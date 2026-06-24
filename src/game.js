@@ -3,11 +3,10 @@ import * as THREE from 'three';
 import { loadSave, save, resetSave, loadGame1Save } from './save.js';
 import { CHAPTERS, BADGES } from './content.js';
 import { CHAPTER_SCRIPTS } from './systems/chapters.js';
-import { makeStarfield, makePlanet, makeNebulaCloud, makeGlowSprite, makeRover } from './world/builders.js';
-import { runCaveSlice } from './cave/caveScene.js';
+import { makeStarfield, makeNebulaCloud } from './world/builders.js';
+import { makePulsar, makeDysonSphere } from './showpieces/cosmic.js';
 import { runEarthSlice } from './earth/earthScene.js';
 import { HyperspaceScene } from './hyperspace/hyperspace.js';
-import { RoverDriveScene } from './rover/roverDrive.js';
 import { Pipeline } from './fx/post.js';
 import * as ui from './ui/ui.js';
 import { openParentZone } from './ui/parent.js';
@@ -25,31 +24,24 @@ class TitleBackdrop {
     sun.position.set(30, 20, 10);
     this.scene.add(sun);
 
-    // the poster shot: red Mars beside a half-terraformed Mars, a little rover below
-    const cloud = makeNebulaCloud(0x9a5a3a, 10, 50);
+    // the finale poster shot: a pulsar lighthouse sweeping over the deep galaxy
+    const cloud = makeNebulaCloud(0x4a6ab0, 10, 50);
     cloud.position.set(0, 8, -82);
     this.scene.add(cloud);
 
-    this.planets = [];
-    const layout = [['marsred', 3.2, -13, 3, -48], ['marsalive', 2.0, 17, -6, -42]];
-    for (const [key, r, x, y, z] of layout) {
-      const p = makePlanet(key, r);
-      p.position.set(x, y, z);
-      this.scene.add(p);
-      this.planets.push(p);
-    }
+    this.pulsar = makePulsar(1.4);
+    this.pulsar.position.set(13, 6, -56);
+    this.scene.add(this.pulsar);
 
-    this.rover = makeRover();
-    this.rover.scale.setScalar(2.2);
-    this.rover.position.set(2, -6, -18);
-    this.rover.rotation.y = -0.5;
-    this.scene.add(this.rover);
+    this.dyson = makeDysonSphere(0.7);
+    this.dyson.position.set(-15, -3, -46);
+    this.scene.add(this.dyson);
   }
   update(dt, t) {
-    for (const p of this.planets) p.rotation.y += dt * 0.12;
-    this.rover.position.y = -6 + Math.sin(t * 1.5) * 0.15;
+    this.pulsar.userData.update(dt, t);
+    this.dyson.userData.update(dt, t);
     this.camera.position.x = Math.sin(t * 0.08) * 4;
-    this.camera.lookAt(0, -1, -30);
+    this.camera.lookAt(0, 0, -40);
   }
   dispose() {}
 }
@@ -111,40 +103,26 @@ export class Game {
         ui.rewardBurst(badge.icon, `Badge earned: ${badge.name}!`,
           prize ? `Show a grown-up — this badge is worth a real prize: "${prize.reward}" 🎁` : 'You\'re becoming a legend of the spaceways!');
       }
-      if (badge.id === 'finish' && earned) collectSagaPiece('game4');
+      if (badge.id === 'finish' && earned) collectSagaPiece('game5');
     }
   }
 
-  /** Transition INTO a chapter: a star-flight to Mars, a rover drive between
-   *  sites, or a simple fade. The chapter script then builds its own scene. */
+  /** Transition INTO a chapter: a near-light-speed star-flight (the starbow), or
+   *  a simple fade. The chapter script then builds its own scene. */
   async arrive(ch) {
     if (ch.arrival === 'self') return;
-    if (ch.arrival === 'flight') {
+    if (ch.arrival === 'jump') {
       if (ui.isFaded()) await this.toBackdrop();
       await ui.dialogue([
-        { who: 'luma', text: 'Course locked on Mars! Hold tight, Cadet — riding the star-stream all the way to the Red Planet!' },
-        { who: 'bolt', text: 'Steer with the joystick, hold LIGHTSPEED to zoom, and grab the ⭐ stars along the way!' }
+        { who: 'luma', text: `Course locked on ${ch.name}! Ride the starbow, Cadet — steer with the joystick, hold LIGHTSPEED, and catch the ⭐ stars!` }
       ]);
       await ui.fade(true);
-      const ride = new HyperspaceScene(this, 'MARS');
+      const ride = new HyperspaceScene(this, ch.name);
       this.setScene(ride);
       await ui.fade(false);
       await ride.run();
       ride.dispose();
       ui.countJump();
-      return;
-    }
-    if (ch.arrival === 'drive') {
-      if (ui.isFaded()) await this.toBackdrop();
-      await ui.dialogue([
-        { who: 'rusty', text: `Hop aboard — I'll drive us to ${ch.name}! Steer me with the joystick, hold GO to roll faster, and scoop up any ⭐ stars you see!` }
-      ]);
-      await ui.fade(true);
-      const drive = new RoverDriveScene(this, ch.name);
-      this.setScene(drive);
-      await ui.fade(false);
-      await drive.run();
-      drive.dispose();
       return;
     }
     await ui.fade(true);   // plain montage-style arrival
@@ -178,7 +156,7 @@ export class Game {
     let greeting = null;
     if (g1?.name && !s.name) {
       greeting = g1.chapter >= 6
-        ? `🏅 Welcome back, Cadet ${g1.name} — Star Rescuer!`
+        ? `🏅 Welcome back, Cadet ${g1.name} — World Builder!`
         : `👋 Good to see you again, Cadet ${g1.name}!`;
     }
 
@@ -192,7 +170,7 @@ export class Game {
       const name = await ui.nameEntry(g1?.name || '');
       s.name = name;
       if (g1?.chapter >= 6 && g1?.name?.toLowerCase() === name.toLowerCase()) {
-        s.game1Hero = true;   // unlocks the Star Rescuer badge (finished game 3)
+        s.game1Hero = true;   // unlocks the World Builder badge (finished game 4)
       }
       save();
       this.checkBadges();
@@ -202,10 +180,10 @@ export class Game {
       s.seenIntro = true;
       save();
       await ui.dialogue([
-        { who: 'bolt', text: `Cadet ${s.name}, reporting for duty! Bolt here, fact-checker chip warmed up. Beep!` },
-        { who: 'luma', text: 'We saved the Solari from their dying star — but they still need somewhere to live. So we found them a world...' },
-        { who: 'bolt', text: 'A small, red, rocky world: MARS. There\'s just one problem, Cadet. When we got close, we found out Mars is... well... a DEAD planet.', stamp: 'real' },
-        { who: 'bolt', text: 'Cold. Dry. Silent. But maybe — just maybe — we can wake it back up. Buckle up. Let\'s land on the Red Planet.' }
+        { who: 'bolt', text: `Cadet ${s.name}, reporting for duty — one last time. Bolt here, fact-checker chip warmed up. Beep!` },
+        { who: 'luma', text: 'We\'ve saved baby stars, lost civilizations, and a whole red planet. But now the greatest danger of all is coming...' },
+        { who: 'bolt', text: 'That killer beam we\'ve chased across the galaxy is finally on a path toward a small blue world. Toward EARTH. Toward home.', stamp: 'real' },
+        { who: 'bolt', text: 'This is the big one, Cadet — the mission everything has led to. Set course for home. Let\'s go save the Earth.' }
       ]);
     }
 
@@ -271,7 +249,7 @@ export class Game {
       screen.className = 'screen dim';
       const title = document.createElement('div');
       title.className = 'title-sub';
-      title.textContent = '🌟 Mission complete! Revisit any part of Mars:';
+      title.textContent = '🏆 Saga complete! Revisit any chapter:';
       screen.appendChild(title);
       const wrap = document.createElement('div');
       wrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:80vw;';

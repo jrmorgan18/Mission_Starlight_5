@@ -672,6 +672,24 @@ button { font-family: var(--font); cursor: pointer; border: none; }
 .jig-piece.drag { cursor: grabbing; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.6)); }
 .jig-piece.locked { filter: drop-shadow(0 0 8px rgba(92,232,255,0.7)); }
 
+/* ---------- Time-dilation two-clocks beat ---------- */
+.tw-title { font-size: clamp(20px, 4vw, 30px); font-weight: 900; color: #aef2ff; text-shadow: 0 0 14px rgba(92,232,255,0.5); }
+.tw-row { display: flex; gap: clamp(20px, 8vw, 70px); margin: 14px 0; }
+.tw-clock { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.tw-face {
+  width: 110px; height: 110px; border-radius: 50%;
+  border: 5px solid rgba(92,232,255,0.6); background: rgba(10,14,30,0.7);
+  position: relative; box-shadow: 0 0 22px rgba(92,232,255,0.25);
+}
+.tw-hand { position: absolute; left: 50%; bottom: 50%; width: 4px; height: 42px; background: #ffd95c; transform-origin: bottom center; border-radius: 2px; }
+.tw-hand.ship { animation: twship 4s linear infinite; }
+.tw-hand.earth { animation: twearth 1.1s linear infinite; background: #ff8a6a; }
+@keyframes twship { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(40deg); } }
+@keyframes twearth { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+.tw-label { font-size: 14px; font-weight: 900; letter-spacing: 1px; color: #cfe0ff; }
+.tw-time { font-size: clamp(18px, 4vw, 26px); font-weight: 900; color: #ffd95c; }
+.tw-note { font-size: 15px; opacity: 0.9; max-width: 80vw; text-align: center; }
+
 /* ---------- Phase-A slice: killer-star showpiece ---------- */
 #slice-fps {
   position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 50%;

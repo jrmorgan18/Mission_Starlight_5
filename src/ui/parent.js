@@ -65,9 +65,9 @@ function buildZone(game, onReset) {
   /* ---- overview ---- */
   const overview = el('div', 'pz-section');
   overview.appendChild(el('h3', '', '📊 OVERVIEW'));
-  const chapterNames = ['The Red Welcome', 'The Ghost Rivers', 'Why a Planet Dies', 'Into the Caves', 'The Keystone', 'A New Dawn', 'Story complete! 🎉'];
-  overview.appendChild(el('div', 'skill-row', `Story progress: ${chapterNames[Math.min(s.chapter, 6)]} (chapter ${Math.min(s.chapter + 1, 6)} of 6)`));
-  overview.appendChild(el('div', 'skill-row', `🪨 Samples: ${s.samples || 0} · ⭐ Stars: ${s.starBits} · 🧰 Upgrades: ${Object.keys(s.suit || {}).length}/5 · 👽 Crew cards: ${s.cards.length}/${CARDS.length} · 🕵️ Clues: ${s.clues.length}/${Object.keys(CLUES).length}`));
+  const chapterNames = ['Homecoming', 'Into the Starbow', 'The Pulsar Lighthouse', 'The Architects', 'The Dyson Sphere', 'The Machine Mind', 'The Long Build', 'The Great Deflector', 'Turn the Beam', 'The Long Way Home', 'Story complete! 🎉'];
+  overview.appendChild(el('div', 'skill-row', `Story progress: ${chapterNames[Math.min(s.chapter, 10)]} (chapter ${Math.min(s.chapter + 1, 10)} of 10)`));
+  overview.appendChild(el('div', 'skill-row', `⭐ Stars: ${s.starBits} · 🌀 Jumps: ${s.jumps} · 👽 Crew cards: ${s.cards.length}/${CARDS.length} · 🕵️ Clues: ${s.clues.length}/${Object.keys(CLUES).length}`));
   body.appendChild(overview);
 
   /* ---- skills dashboard ---- */

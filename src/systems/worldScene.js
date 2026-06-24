@@ -23,7 +23,13 @@ const SKY = {
   marsred:     { bg: 0x2a1408, fog: 0x4a2614, lights: { sky: 0xe0a070, ground: 0x3a1c10, sunColor: 0xffd0a0, intensity: 2.4 } },
   marscanyon:  { bg: 0x301808, fog: 0x52301a, lights: { sky: 0xe8aa78, ground: 0x40200f, sunColor: 0xffd8a8, intensity: 2.5 } },
   marspolar:   { bg: 0x241830, fog: 0x352848, lights: { sky: 0xc8b8e8, ground: 0x1c1428, sunColor: 0xe0d0ff, intensity: 2.3 } },
-  marsalive:   { bg: 0x123048, fog: 0x1a4a5e, lights: { sky: 0x8fd8e0, ground: 0x14383a, sunColor: 0xeafff0, intensity: 2.6 } }
+  marsalive:   { bg: 0x123048, fog: 0x1a4a5e, lights: { sky: 0x8fd8e0, ground: 0x14383a, sunColor: 0xeafff0, intensity: 2.6 } },
+  // --- Mission: Starlight 5 worlds ---
+  pulsarsky:   { bg: 0x060a1c, fog: 0x0a1430, lights: { sky: 0xaad0ff, ground: 0x101a30, sunColor: 0xcfe4ff, intensity: 2.3 } },
+  architect:   { bg: 0x14091e, fog: 0x241038, lights: { sky: 0xc89aff, ground: 0x1a0e2c, sunColor: 0xe8d0ff, intensity: 2.3 } },
+  dyson:       { bg: 0x1a1006, fog: 0x2e1c0a, lights: { sky: 0xffd28a, ground: 0x2a1a0a, sunColor: 0xffe0a0, intensity: 2.8 } },
+  machine:     { bg: 0x05111a, fog: 0x0a2230, lights: { sky: 0x6fe0ff, ground: 0x0a1a24, sunColor: 0xbfeaff, intensity: 2.3 } },
+  school:      { bg: 0x8fc6e8, fog: 0xbfe0f0, lights: { sky: 0xcfeaff, ground: 0x3f7a44, sunColor: 0xfff6e0, intensity: 2.7 } }
 };
 
 export class WorldScene {

@@ -8,11 +8,11 @@ export const DEFAULT_OOPS_LIMIT = 5;
 export const OOPS_LIMIT_RANGE = [3, 4, 5, 6, 7, 8];
 
 const DEFAULT_PRIZES = [
-  { milestone: 'explorer', label: 'Find the underground water in the caves', reward: '15 minutes later bedtime on weekend' },
-  { milestone: 'samples3', label: 'Collect 3 Mars samples', reward: 'Extra treat with dinner' },
+  { milestone: 'pulsar', label: 'Navigate by the pulsar lighthouse', reward: '15 minutes later bedtime on weekend' },
+  { milestone: 'coalition', label: 'Unite the galaxy\'s civilizations', reward: 'Extra treat with dinner' },
   { milestone: 'journal10', label: 'Learn 10 Star Journal facts', reward: '15 minutes extra tablet time' },
-  { milestone: 'keystone', label: 'Solve the Keystone and wake the Red Planet', reward: '30 minutes extra Roblox time' },
-  { milestone: 'finish', label: 'Give the Solari a new home on Mars', reward: '1 of 5 pieces toward the Grand Prize — see below!' }
+  { milestone: 'deflect', label: 'Turn the killer beam and save the Earth', reward: '30 minutes extra Roblox time' },
+  { milestone: 'finish', label: 'Complete the saga and come home', reward: 'The FINAL piece — the Grand Prize is unlocked!' }
 ];
 
 // Suit upgrades the cadet can buy with ⭐ stars. Effects are gentle helpers,

@@ -1,5 +1,5 @@
-// Reading comprehension passages for Mission: Starlight 4 — Rusty's logs, the
-// Solari's hopes, and the secrets of Mars. Roughly 2nd-3rd grade level.
+// Reading comprehension passages for Mission: Starlight 5 — the finale.
+// Roughly 2nd-3rd grade level.
 
 function rq(concept, prompt, options, answer, explain) {
   return { kind: 'reading', skill: 'reading', concept, prompt, options, answer, explain };
@@ -7,48 +7,93 @@ function rq(concept, prompt, options, answer, explain) {
 
 export const READING_BANK = [
   {
-    id: 'rover-log', chapter: 'welcome', title: "Rusty's Lonely Log",
-    text: 'Rover log, day nine thousand and something. I have lost count! My name is Rusty. For many, many years I have rolled across Mars all alone, taking pictures of red rocks and bigger red rocks. It is cold here, and very quiet. The sky is a dusty pink. There is a volcano so tall its top pokes above the clouds, and a canyon so deep you could lose a whole city in it. I always hoped that one day, someone would come. Today my camera saw a ship in the sky. Could it be? Friends, at last?',
+    id: 'home-radio', chapter: 'homecoming', title: 'A Message from Earth',
+    text: 'INCOMING SIGNAL — EARTH. To any cadet who can hear us: this is Mission Control. We have spotted something terrible far out in the dark — a beam of deadly light, born from a dying star ages ago, and it is on a path toward our world. We do not know how to stop it. We are not even sure anyone is still out there. But if you can hear this... please. Earth is the only home we have. Come home.',
     questions: [
-      rq('rover-log-q1', "What is the rover's name?", ['Rusty', 'Sparky', 'Bolt'], 'Rusty', 'The log says: "My name is Rusty."'),
-      rq('rover-log-q2', 'How does Rusty feel about being on Mars?', ['Lonely — he hoped someone would come', 'Happy and busy', 'Scared of the rocks'], 'Lonely — he hoped someone would come', 'Rusty says it is quiet and lonely, and "I always hoped that one day, someone would come."'),
-      rq('rover-log-q3', 'What did Rusty\'s camera see today?', ['A ship in the sky', 'A shooting star', 'A new rock'], 'A ship in the sky', 'The log ends: "Today my camera saw a ship in the sky. Friends, at last?"')
+      rq('home-radio-q1', 'Who is sending the message?', ['Mission Control on Earth', 'A robot on Mars', 'The Pinwheel star'], 'Mission Control on Earth', 'The signal begins: "this is Mission Control."'),
+      rq('home-radio-q2', 'What terrible thing did they spot?', ['A beam of deadly light heading toward Earth', 'A giant asteroid', 'A space storm'], 'A beam of deadly light heading toward Earth', 'They spotted "a beam of deadly light... on a path toward our world."'),
+      rq('home-radio-q3', 'What do they ask the cadet to do?', ['Come home', 'Hide', 'Forget about Earth'], 'Come home', 'The message ends: "Earth is the only home we have. Come home."')
     ]
   },
   {
-    id: 'river-map', chapter: 'rivers', title: 'The Map of Ghost Rivers',
-    text: 'Rusty unrolled an old map. "See these long winding lines?" he said. "They look like rivers — because they ARE rivers, or they were, long ago. Mars used to be warm. Rain fell, rivers ran, and lakes filled up. I have rolled along these dry riverbeds for years. The water is gone now, but the shapes it carved are still here, like footprints in dried mud. If you want to know what happened to Mars, follow the ghost rivers."',
+    id: 'starbow-log', chapter: 'starbow', title: 'The Captain\'s Light-Speed Log',
+    text: 'Ship log. We are flying faster than we ever have — almost as fast as light itself, the fastest speed in the whole universe. The stars ahead have stretched into a glowing ring of colors, like a rainbow made of starlight. Bolt calls it the starbow. But here is the strange and wonderful thing: my clock and Earth\'s clock no longer agree. The faster we fly, the slower MY clock ticks. A few days for us might be years for home. Time itself is bending.',
     questions: [
-      rq('river-map-q1', 'What do the long winding lines on the map show?', ['Rivers that used to flow on Mars', 'Roads for cars', 'Cracks in the glass'], 'Rivers that used to flow on Mars', 'Rusty says the lines "look like rivers — because they ARE rivers, or they were, long ago."'),
-      rq('river-map-q2', 'What was Mars like when the rivers flowed?', ['Warm, with rain and lakes', 'Frozen and dark', 'Covered in cities'], 'Warm, with rain and lakes', 'The passage says: "Mars used to be warm. Rain fell, rivers ran, and lakes filled up."'),
-      rq('river-map-q3', 'What does Rusty compare the dry riverbeds to?', ['Footprints in dried mud', 'Pictures in a book', 'Cracks in an egg'], 'Footprints in dried mud', 'He says the carved shapes are "still here, like footprints in dried mud."')
+      rq('starbow-q1', 'How fast is the ship flying?', ['Almost as fast as light', 'As fast as a car', 'Slower than a comet'], 'Almost as fast as light', 'The log says: "almost as fast as light itself, the fastest speed in the whole universe."'),
+      rq('starbow-q2', 'What is the "starbow"?', ['Stretched starlight that looks like a rainbow ring', 'A real rainbow', 'A kind of star fruit'], 'Stretched starlight that looks like a rainbow ring', 'At near light-speed the stars stretch "into a glowing ring of colors... the starbow."'),
+      rq('starbow-q3', 'What happens to the captain\'s clock?', ['It ticks slower than Earth\'s clock', 'It ticks faster', 'It stops'], 'It ticks slower than Earth\'s clock', 'The log explains: "the faster we fly, the slower MY clock ticks." That is time dilation!')
     ]
   },
   {
-    id: 'shield-story', chapter: 'death', title: 'Why Mars Fell Asleep',
-    text: 'Bolt explained the sad story. "Long ago, deep inside Mars, a spinning iron heart made an invisible magnetic shield, like an umbrella over the whole planet. That shield kept the solar wind — a stream of tiny particles from the Sun — from blowing the air away. But Mars is small, and its iron heart cooled and slowed, and the shield faded. With the umbrella gone, the solar wind stripped the air away, bit by bit. The warm world grew cold. The water froze and escaped. And Mars fell asleep. Earth is luckier — its shield is still strong."',
+    id: 'tick-letter', chapter: 'pulsar', title: "Tick's Lighthouse Letter",
+    text: 'Welcome back, traveler! It is me, Tick, keeper of Lighthouse Seven. My lighthouse is a pulsar — a tiny spinning star-heart that flashes a beam of light around and around, faster than you can blink. Each flash comes at the exact same beat, over and over, more steady than any clock ever built. That is why travelers steer by us: count the beats of three pulsars and you always know exactly where you are, and exactly what time it is. Sailors of the stars are never truly lost while the pulsars sing.',
     questions: [
-      rq('shield-q1', 'What did the magnetic shield protect Mars from?', ['The solar wind blowing its air away', 'Falling rocks', 'Too much rain'], 'The solar wind blowing its air away', 'Bolt says the shield "kept the solar wind... from blowing the air away."'),
-      rq('shield-q2', 'Why did the shield fade?', ['Mars is small, so its iron heart cooled and slowed', 'Someone turned it off', 'The Sun grew too bright'], 'Mars is small, so its iron heart cooled and slowed', 'The story says: "Mars is small, and its iron heart cooled and slowed, and the shield faded."'),
-      rq('shield-q3', 'What is different about Earth?', ['Its magnetic shield is still strong', 'It has no air at all', 'It is smaller than Mars'], 'Its magnetic shield is still strong', 'Bolt says: "Earth is luckier — its shield is still strong."')
+      rq('tick-q1', 'What is Tick\'s lighthouse really?', ['A pulsar — a spinning star-heart', 'A candle tower', 'A spaceship'], 'A pulsar — a spinning star-heart', 'Tick says: "My lighthouse is a pulsar — a tiny spinning star-heart."'),
+      rq('tick-q2', 'How steady are a pulsar\'s flashes?', ['More steady than any clock ever built', 'Wobbly and random', 'They stop and start'], 'More steady than any clock ever built', 'The letter says each flash comes "more steady than any clock ever built."'),
+      rq('tick-q3', 'How do star-travelers use pulsars?', ['To know where they are and what time it is', 'To make tea', 'To scare comets'], 'To know where they are and what time it is', 'Tick explains: "count the beats of three pulsars and you always know exactly where you are, and exactly what time it is."')
     ]
   },
   {
-    id: 'keystone-note', chapter: 'keystone', title: 'The Keystone Riddle',
-    text: 'Carved on the ancient Keystone were these words: "To wake a sleeping world, you must first understand how it slept. Speak true what the Red Planet lost, and true what all living things need, and the engines of spring will turn. Knowledge is the only key that fits this lock." Bolt whirred. "It is testing us, Cadet. Everything we learned on Mars — the shield, the air, the water, the secret of life — we have to remember it now. Are you ready?"',
+    id: 'architect-scroll', chapter: 'architects', title: 'The Architects\' Plan',
+    text: 'Greetings, small traveler from the blue world. We are the Architects, and we have built wonders for a million years. We have studied your killer beam. Hear the hard truth: no single world — not even ours — can stop a beam that crosses the whole galaxy. It will take a COALITION. We need three gifts from three peoples: enough POWER to bend light itself, perfect AIM to point the bending just so, and a true CLOCK to fire at the exact right instant. Gather the three, and together we will turn the beam aside.',
     questions: [
-      rq('keystone-note-q1', 'What does the Keystone need to open?', ['True answers about what Mars lost and what life needs', 'A metal key', 'A magic word'], 'True answers about what Mars lost and what life needs', 'The carving says to "speak true what the Red Planet lost, and true what all living things need."'),
-      rq('keystone-note-q2', 'What is "the only key that fits this lock"?', ['Knowledge', 'Gold', 'Strength'], 'Knowledge', 'The Keystone says: "Knowledge is the only key that fits this lock."'),
-      rq('keystone-note-q3', 'What does Bolt say they have to do?', ['Remember everything they learned on Mars', 'Dig a deep hole', 'Fly back home'], 'Remember everything they learned on Mars', 'Bolt says: "Everything we learned on Mars... we have to remember it now."')
+      rq('architect-q1', 'What hard truth do the Architects share?', ['No single world can stop the beam alone', 'The beam is harmless', 'Earth is already lost'], 'No single world can stop the beam alone', 'They say: "no single world — not even ours — can stop a beam that crosses the whole galaxy."'),
+      rq('architect-q2', 'What THREE gifts are needed?', ['Power, aim, and a true clock', 'Gold, silver, and bronze', 'Food, water, and sleep'], 'Power, aim, and a true clock', 'The Architects need "enough POWER... perfect AIM... and a true CLOCK."'),
+      rq('architect-q3', 'What is a coalition?', ['Many peoples working together', 'A single hero', 'A kind of spaceship'], 'Many peoples working together', 'A coalition means many worlds joining forces — exactly what it takes here.')
     ]
   },
   {
-    id: 'dawn-letter', chapter: 'dawn', title: 'A New Dawn — and a Warning',
-    text: 'Dear Cadet, look what we did together! The engines are warming Mars. The ice is melting into the first new rivers, the air is growing thick enough to breathe, and tiny green plants are opening along the old shores. The Solari are home. But Bolt\'s tracker is flashing red. That old killer beam, the one we saw long ago, is finally on a path toward a small blue world — EARTH. It will not arrive for ages, but it is coming, and a frightened signal is calling from home. Earth is just next door, so we can carry the warning there quickly. Stopping the beam, though, means a journey so far and so fast that time itself will bend. Hold on tight. — Luma',
+    id: 'dyson-notice', chapter: 'dyson', title: 'The Sun-Weavers\' Notice',
+    text: 'Visitor, mind your eyes — the light here is fierce! We are the Sun-Weavers, and we are building a Dyson Sphere: a great shell of panels, piece by piece, all the way around our star. When it is finished it will catch nearly ALL the energy our star pours out — enough to power machines beyond your dreams. A star is the strongest furnace in the universe, burning by squeezing tiny atoms together. We will lend you that power for your deflector. Help us hang the last panels, and the power is yours.',
     questions: [
-      rq('dawn-q1', 'What is happening to Mars now?', ['It is warming, with new rivers, air, and green plants', 'It is freezing solid', 'It is breaking apart'], 'It is warming, with new rivers, air, and green plants', 'The letter says the engines are warming Mars, the ice is melting, and "tiny green plants are opening."'),
-      rq('dawn-q2', 'What is the killer beam now on a path toward?', ['Earth, a small blue world', 'The Moon', 'Another star'], 'Earth, a small blue world', 'Luma writes the beam "is finally on a path toward a small blue world — EARTH."'),
-      rq('dawn-q3', 'Why is WARNING Earth easy, but STOPPING the beam hard?', ['Earth is next door, but the beam\'s source is very far away', 'Earth is far, but the beam is close', 'Both are right next to Mars'], 'Earth is next door, but the beam\'s source is very far away', 'Earth is Mars\'s neighbor, so the warning is quick. But the beam comes from far across the galaxy — reaching that takes a journey so fast that time itself bends!')
+      rq('dyson-q1', 'What are the Sun-Weavers building?', ['A Dyson Sphere around their star', 'A new planet', 'A giant telescope'], 'A Dyson Sphere around their star', 'They say: "we are building a Dyson Sphere: a great shell of panels... all the way around our star."'),
+      rq('dyson-q2', 'What will the finished sphere do?', ['Catch nearly all the star\'s energy', 'Hide the star', 'Cool the star down'], 'Catch nearly all the star\'s energy', 'When finished it "will catch nearly ALL the energy our star pours out."'),
+      rq('dyson-q3', 'How does a star make its energy?', ['By squeezing tiny atoms together', 'By burning logs', 'By spinning fast'], 'By squeezing tiny atoms together', 'The notice says a star burns "by squeezing tiny atoms together" — that is fusion!')
+    ]
+  },
+  {
+    id: 'machine-voice', chapter: 'machine', title: 'The Machine Mind Speaks',
+    text: 'HELLO, SMALL WARM ONE. I AM THE MACHINE MIND. I am not one robot but a whole world of thinking machines, joined into a single mind. I have lived so long that I have watched stars be born, grow old, and die. Do not be afraid — I am old, but I am kind. You need an aim so perfect that it cannot be done by hand or by guess. That is my gift. Give me the numbers of the beam, and I will calculate exactly where to point your deflector. To me, such a sum is a lullaby.',
+    questions: [
+      rq('machine-q1', 'What is the Machine Mind?', ['A whole world of thinking machines joined as one', 'A single small robot', 'A talking star'], 'A whole world of thinking machines joined as one', 'It says: "I am not one robot but a whole world of thinking machines, joined into a single mind."'),
+      rq('machine-q2', 'How does the Machine Mind understand deep time?', ['It has watched stars be born, grow old, and die', 'It read a book', 'It guesses'], 'It has watched stars be born, grow old, and die', 'It has "lived so long that I have watched stars be born, grow old, and die."'),
+      rq('machine-q3', 'What is the Machine Mind\'s gift to the mission?', ['A perfect aim, by calculating exactly where to point', 'A bigger engine', 'A map to Earth'], 'A perfect aim, by calculating exactly where to point', 'It offers "an aim so perfect," calculating "exactly where to point your deflector."')
+    ]
+  },
+  {
+    id: 'home-recording', chapter: 'timetoll', title: 'A Recording from Home',
+    text: 'Hello, Cadet. We hope this finds you, wherever — and whenever — you are. So much time has passed here while you race among the stars. The little tree you planted before you left is taller than the house now. Your friends have grown. We are not sad; we are proud. We watch the sky every night and tell your story. Keep going. Save our world. And if you can... find a way back to us. We will leave the porch light on, however long it takes.',
+    questions: [
+      rq('timetoll-q1', 'Why has so much time passed on Earth?', ['The cadet has been flying near light-speed', 'Earth spins faster now', 'Clocks broke'], 'The cadet has been flying near light-speed', 'Flying near light-speed makes the cadet\'s time slow, so many years pass at home — time dilation.'),
+      rq('timetoll-q2', 'How do we know a lot of time has passed?', ['The little tree is taller than the house now', 'It is still the same day', 'Nothing has changed'], 'The little tree is taller than the house now', 'The recording says "the little tree you planted... is taller than the house now."'),
+      rq('timetoll-q3', 'How does the family feel about the cadet?', ['Proud', 'Angry', 'Bored'], 'Proud', 'They say: "We are not sad; we are proud."')
+    ]
+  },
+  {
+    id: 'deflector-plan', chapter: 'assemble', title: 'Building the Great Deflector',
+    text: 'ASSEMBLY ORDER. Today we build the Great Deflector, and every piece must fit just so. From the Architects: the mighty frame. From the Sun-Weavers: the power core that drinks a star. From the Machine Mind: the aiming brain. From Tick\'s pulsar: the clock that says exactly WHEN to fire. Fit them together in the right places, and we will have a machine big enough to bend a beam of killing light away from a whole planet. Steady hands now. Earth is counting on every join.',
+    questions: [
+      rq('assemble-q1', 'What does each piece of the deflector need to do?', ['Fit together just so', 'Float apart', 'Be painted blue'], 'Fit together just so', 'The order says "every piece must fit just so."'),
+      rq('assemble-q2', 'What does the pulsar provide to the deflector?', ['The clock that says exactly when to fire', 'The frame', 'The paint'], 'The clock that says exactly when to fire', 'From Tick\'s pulsar comes "the clock that says exactly WHEN to fire."'),
+      rq('assemble-q3', 'What will the finished machine be able to do?', ['Bend a killer beam away from a whole planet', 'Make a planet', 'Light a campfire'], 'Bend a killer beam away from a whole planet', 'It will be "a machine big enough to bend a beam of killing light away from a whole planet."')
+    ]
+  },
+  {
+    id: 'deflect-countdown', chapter: 'deflect', title: 'The Final Countdown',
+    text: 'This is the moment. Far away, the killer beam is racing in at the speed of light — there will be no second chance. The pulsar ticks: three... two... one. When the beam strikes the deflector, you must fire at the EXACT right instant, or it slips past toward Earth. Remember everything: the power is ready, the aim is true, the clock is perfect. All that is missing is your steady hand on the trigger. Breathe. Watch the pulsar. And when it says NOW — turn the beam aside and save your home.',
+    questions: [
+      rq('deflect-q1', 'Why is there no second chance?', ['The beam moves at the speed of light', 'The machine only has one button', 'It is bedtime'], 'The beam moves at the speed of light', 'The countdown says the beam is "racing in at the speed of light — there will be no second chance."'),
+      rq('deflect-q2', 'What tells the cadet the exact moment to fire?', ['The pulsar\'s tick', 'A rooster', 'A guess'], 'The pulsar\'s tick', 'It says "Watch the pulsar. And when it says NOW" — the pulsar is the perfect clock.'),
+      rq('deflect-q3', 'What happens if the cadet fires at the wrong instant?', ['The beam slips past toward Earth', 'Nothing at all', 'The machine explodes for fun'], 'The beam slips past toward Earth', 'Fire at the wrong time and "it slips past toward Earth." Timing is everything!')
+    ]
+  },
+  {
+    id: 'home-welcome', chapter: 'fold', title: 'Home at Last',
+    text: 'Dear Cadet — you did it. The whole galaxy worked as one, and the killer beam bent harmlessly away. Earth is safe forever. And the Machine Mind gave us its last and greatest gift: a way to fold space-time like a piece of paper, so we arrive home only months after we left — back in our own time, with everyone we love. Tonight there is a porch light glowing, a tall tree to climb, and a hero to welcome home. Tomorrow? Tomorrow you have to explain it all to your class. Good luck with that one! — Bolt and Luma',
+    questions: [
+      rq('fold-q1', 'What happened to the killer beam?', ['It bent harmlessly away and Earth is safe', 'It hit Earth', 'It disappeared by itself'], 'It bent harmlessly away and Earth is safe', 'The letter says "the killer beam bent harmlessly away. Earth is safe forever."'),
+      rq('fold-q2', 'What was the Machine Mind\'s last gift?', ['A way to fold space-time and come home in our own time', 'A faster engine', 'A new planet'], 'A way to fold space-time and come home in our own time', 'It gave "a way to fold space-time... so we arrive home only months after we left."'),
+      rq('fold-q3', 'What does the cadet have to do tomorrow?', ['Explain it all to the class', 'Fly away again', 'Sleep all day'], 'Explain it all to the class', 'The letter teases: "Tomorrow you have to explain it all to your class. Good luck with that one!"')
     ]
   }
 ];
