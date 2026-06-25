@@ -261,47 +261,46 @@ const WORLD_RECIPES = {
     }
     heightSpeckle(hctx, w, h, 80, 4, 18, false);
   },
-  deck(ctx, w, h, hctx) {              // sci-fi station deck — metal panels, glowing seams
-    ctx.fillStyle = '#26324c'; ctx.fillRect(0, 0, w, h);
-    speckle(ctx, w, h, '#2e3c5a', 80, 10, 40, 0.4);
-    const step = 128;
-    ctx.lineWidth = 3;
-    for (let x = 0; x <= w; x += step) { ctx.strokeStyle = '#161e30'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); ctx.strokeStyle = 'rgba(92,232,255,0.5)'; ctx.beginPath(); ctx.moveTo(x + 2, 0); ctx.lineTo(x + 2, h); ctx.stroke(); }
-    for (let y = 0; y <= h; y += step) { ctx.strokeStyle = '#161e30'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); ctx.strokeStyle = 'rgba(92,232,255,0.35)'; ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(w, y + 2); ctx.stroke(); }
-    ctx.fillStyle = '#4a5a7a';   // rivets
-    for (let x = step / 2; x < w; x += step) for (let y = step / 2; y < h; y += step) { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
-    // a couple of hazard-stripe patches
-    for (let k = 0; k < 3; k++) { const px = Math.random() * (w - 200), py = Math.random() * (h - 80); ctx.save(); ctx.translate(px, py); for (let i = 0; i < 6; i++) { ctx.fillStyle = i % 2 ? '#e8c44a' : '#1a1a1a'; ctx.fillRect(i * 30, 0, 30, 60); } ctx.restore(); }
-    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
-    hctx.strokeStyle = '#505050'; hctx.lineWidth = 3;
-    for (let x = 0; x <= w; x += step / 2) { hctx.beginPath(); hctx.moveTo(x, 0); hctx.lineTo(x, h); hctx.stroke(); }
-    for (let y = 0; y <= h; y += step / 2) { hctx.beginPath(); hctx.moveTo(0, y); hctx.lineTo(w, y); hctx.stroke(); }
-  },
-  dysondeck(ctx, w, h, hctx) {         // warm industrial deck near a caged star
-    ctx.fillStyle = '#3a2c18'; ctx.fillRect(0, 0, w, h);
-    speckle(ctx, w, h, '#4a3820', 80, 10, 40, 0.4);
-    const step = 128;
-    ctx.lineWidth = 3;
-    for (let x = 0; x <= w; x += step) { ctx.strokeStyle = '#241a0e'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); ctx.strokeStyle = 'rgba(255,180,80,0.5)'; ctx.beginPath(); ctx.moveTo(x + 2, 0); ctx.lineTo(x + 2, h); ctx.stroke(); }
-    for (let y = 0; y <= h; y += step) { ctx.strokeStyle = '#241a0e'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-    // scattered blue solar cells
-    for (let i = 0; i < 40; i++) { ctx.fillStyle = 'rgba(60,100,200,0.7)'; const sx = Math.random() * w, sy = Math.random() * h; ctx.fillRect(sx, sy, 40, 28); ctx.strokeStyle = '#6fa0ff'; ctx.lineWidth = 1; ctx.strokeRect(sx, sy, 40, 28); }
-    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
-    heightSpeckle(hctx, w, h, 60, 4, 14, true);
-  },
-  stone(ctx, w, h, hctx) {             // ancient Architect city — pale stone + glowing runes
-    ctx.fillStyle = '#5a5276'; ctx.fillRect(0, 0, w, h);
-    const step = 170;
-    for (let x = 0; x < w; x += step) for (let y = 0; y < h; y += step) { ctx.fillStyle = `rgba(${90 + Math.random() * 30 | 0},${82 + Math.random() * 26 | 0},${120 + Math.random() * 30 | 0},1)`; ctx.fillRect(x + 3, y + 3, step - 6, step - 6); }
-    speckle(ctx, w, h, '#3e3858', 120, 4, 16, 0.4);
-    // glowing gold rune inlays along some tile borders
-    ctx.strokeStyle = 'rgba(255,210,120,0.8)'; ctx.lineWidth = 3; ctx.shadowColor = '#ffd27a'; ctx.shadowBlur = 8;
-    for (let i = 0; i < 24; i++) { const x = Math.floor(Math.random() * (w / step)) * step + step / 2, y = Math.floor(Math.random() * (h / step)) * step + step / 2; ctx.strokeRect(x - 22, y - 22, 44, 44); }
+  deck(ctx, w, h, hctx) {              // the pulsar's frozen world — cold blue rock + crystal veins
+    const g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, '#1c2740'); g.addColorStop(0.5, '#243352'); g.addColorStop(1, '#18223a');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    speckle(ctx, w, h, '#324768', 150, 8, 40, 0.5);     // rock mottling
+    speckle(ctx, w, h, '#141c30', 120, 6, 30, 0.5);     // dark hollows
+    speckle(ctx, w, h, '#aee6ff', 90, 1.5, 4, 0.5);     // frost glints
+    // sparse glowing crystal veins (irregular, NOT a grid)
+    ctx.strokeStyle = 'rgba(120,210,255,0.6)'; ctx.lineWidth = 2.5; ctx.shadowColor = '#5ce8ff'; ctx.shadowBlur = 7;
+    for (let i = 0; i < 16; i++) { let x = Math.random() * w, y = Math.random() * h; ctx.beginPath(); ctx.moveTo(x, y); for (let j = 0; j < 5; j++) { x += rand(-80, 80); y += rand(-60, 60); ctx.lineTo(x, y); } ctx.stroke(); }
     ctx.shadowBlur = 0;
     hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
-    hctx.strokeStyle = '#505050'; hctx.lineWidth = 5;
-    for (let x = 0; x <= w; x += step) { hctx.beginPath(); hctx.moveTo(x, 0); hctx.lineTo(x, h); hctx.stroke(); }
-    for (let y = 0; y <= h; y += step) { hctx.beginPath(); hctx.moveTo(0, y); hctx.lineTo(w, y); hctx.stroke(); }
+    heightSpeckle(hctx, w, h, 150, 6, 34, true); heightSpeckle(hctx, w, h, 70, 3, 12, false);
+  },
+  dysondeck(ctx, w, h, hctx) {         // a sun-baked world near the caged star — amber rock
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#7a4a22'); g.addColorStop(0.5, '#995e2c'); g.addColorStop(1, '#623818');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    speckle(ctx, w, h, '#b8783a', 150, 8, 40, 0.45);    // warm dunes
+    speckle(ctx, w, h, '#4a2a12', 110, 6, 30, 0.5);     // dark rock
+    speckle(ctx, w, h, '#ffcf8a', 90, 2, 8, 0.4);       // bright sand glints
+    speckle(ctx, w, h, '#ffe0a0', 30, 1.5, 4, 0.5);     // metallic flecks
+    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
+    heightSpeckle(hctx, w, h, 150, 6, 34, true); heightSpeckle(hctx, w, h, 70, 3, 12, false);
+  },
+  stone(ctx, w, h, hctx) {             // ancient Architect ground — weathered stone + sparse runes
+    const g = ctx.createLinearGradient(0, 0, w, 0);
+    g.addColorStop(0, '#5a5276'); g.addColorStop(0.5, '#665e84'); g.addColorStop(1, '#4e4668');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    speckle(ctx, w, h, '#6e6690', 130, 10, 44, 0.4);    // stone mottling
+    speckle(ctx, w, h, '#3e3858', 120, 6, 28, 0.45);    // weathering
+    // irregular cracks
+    ctx.strokeStyle = 'rgba(40,36,60,0.7)'; ctx.lineWidth = 2;
+    for (let i = 0; i < 30; i++) { let x = Math.random() * w, y = Math.random() * h; ctx.beginPath(); ctx.moveTo(x, y); for (let j = 0; j < 5; j++) { x += rand(-70, 70); y += rand(-50, 50); ctx.lineTo(x, y); } ctx.stroke(); }
+    // a few scattered glowing rune marks (not on a grid)
+    ctx.fillStyle = 'rgba(255,210,120,0.85)'; ctx.shadowColor = '#ffd27a'; ctx.shadowBlur = 10; ctx.font = '900 46px serif'; ctx.textAlign = 'center';
+    for (const r of ['✦', '◆', '☼', 'ᚨ', 'ᚦ', '❖']) ctx.fillText(r, 120 + Math.random() * (w - 240), 80 + Math.random() * (h - 160));
+    ctx.shadowBlur = 0; ctx.textAlign = 'left';
+    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
+    heightSpeckle(hctx, w, h, 110, 5, 24, true);
   },
   circuit(ctx, w, h, hctx) {           // Machine Mind — dark floor with glowing circuit traces
     ctx.fillStyle = '#081420'; ctx.fillRect(0, 0, w, h);
