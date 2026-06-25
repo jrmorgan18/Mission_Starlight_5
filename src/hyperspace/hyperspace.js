@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { makeShip, makeGlowSprite } from '../world/builders.js';
 import * as ui from '../ui/ui.js';
 import { sfx } from '../audio.js';
+import { hasUpgrade } from '../save.js';
 
 const BOUNDS = 7;            // steering radius inside the tunnel
 const TUNNEL_R = 16;
@@ -106,6 +107,14 @@ export class HyperspaceScene {
 
     this.ship = makeShip();
     this.scene.add(this.ship);
+
+    // Suit Lab upgrades: Starship Paint recolors the engine glow, Star Magnet
+    // widens the photon pickup radius, Ion Boosters raise the lightspeed cap.
+    if (hasUpgrade('paint') && this.ship.userData.engineGlow) {
+      this.ship.userData.engineGlow.material.color.set(0xff7ad0);
+    }
+    this.grabR = hasUpgrade('magnet') ? 4.6 : 2.4;
+    this.boostTop = hasUpgrade('boost') ? 3.6 : 2.8;
 
     this.progress = 0;
     this.speed = 1;
@@ -296,7 +305,7 @@ export class HyperspaceScene {
       this.ship.rotation.z = THREE.MathUtils.lerp(this.ship.rotation.z, -ix * 0.7, dt * 6);
       this.ship.rotation.x = THREE.MathUtils.lerp(this.ship.rotation.x, iy * 0.35, dt * 6);
 
-      const target = thrust ? 2.8 : 1.2;
+      const target = thrust ? this.boostTop : 1.2;
       this.speed = THREE.MathUtils.lerp(this.speed, target, dt * 2.5);
       const rate = new URLSearchParams(location.search).has('fast') ? 0.15 : 0.016;
       this.progress += dt * rate * this.speed;
@@ -330,7 +339,7 @@ export class HyperspaceScene {
         photon.position.x = (Math.random() * 2 - 1) * BOUNDS;
         photon.position.y = (Math.random() * 2 - 1) * BOUNDS * 0.7;
       }
-      if (!this.exiting && photon.position.distanceTo(this.ship.position) < 2.4) {
+      if (!this.exiting && photon.position.distanceTo(this.ship.position) < this.grabR) {
         sfx.collect();
         ui.addStarBits(1);   // HUD star pill pulses; no screen-blocking toast
         photon.position.z = -300 - Math.random() * 50;

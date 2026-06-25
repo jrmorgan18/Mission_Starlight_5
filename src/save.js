@@ -15,15 +15,14 @@ const DEFAULT_PRIZES = [
   { milestone: 'finish', label: 'Complete the saga and come home', reward: 'The FINAL piece — the Grand Prize is unlocked!' }
 ];
 
-// Suit upgrades the cadet can buy with ⭐ stars. Effects are gentle helpers,
-// never required to finish. headlamp/grip change the cave; scanner the mystery.
-// Costs are tuned for the extra stars now earned on the flight + rover drives.
+// Ship/suit upgrades the cadet buys with ⭐ stars (earned on starbow flights and
+// Energy Catch). Gentle helpers, never required to finish; bought in the Suit Lab.
 export const SUIT_UPGRADES = [
-  { id: 'color',    icon: '🎨', name: 'Crimson Paint',   cost: 8,  desc: 'Repaint your suit Mars-red — just for style!' },
-  { id: 'headlamp', icon: '🔦', name: 'Bright Headlamp', cost: 12, desc: 'Light up dark caves much farther.' },
-  { id: 'grip',     icon: '🥾', name: 'Grip Boots',      cost: 12, desc: 'Walk faster across Mars.' },
-  { id: 'oxygen',   icon: '🫧', name: 'Big Oxygen Tank', cost: 16, desc: 'Explore longer without a worry.' },
-  { id: 'scanner',  icon: '🔎', name: 'Scanner Visor',   cost: 20, desc: 'Spot hidden clues and samples.' }
+  { id: 'paint',  icon: '🎨', name: 'Starship Paint',     cost: 6,  desc: 'Give your ship a cool new glow — just for style!' },
+  { id: 'magnet', icon: '🧲', name: 'Star Magnet',        cost: 10, desc: 'Pull in nearby ⭐ stars during flight.' },
+  { id: 'boost',  icon: '⚡', name: 'Ion Boosters',       cost: 12, desc: 'Fly faster when you hold LIGHTSPEED.' },
+  { id: 'gloves', icon: '🫧', name: 'Energy Gloves',      cost: 14, desc: 'Energy orbs glow longer — easier to catch.' },
+  { id: 'slowmo', icon: '🛰️', name: 'Slow-Mo Targeting',  cost: 18, desc: 'More time to fire the deflector on the beat.' }
 ];
 
 function defaultSave() {

@@ -14,7 +14,7 @@ import { makeAlien, makeLuma, makeArchitect, makeRobot, makeKid, makeRock, makeS
 import { sagaStatus } from '../saga.js';
 import * as ui from '../ui/ui.js';
 import { pickMath, pickScience, pickReading } from '../edu/engine.js';
-import { loadSave } from '../save.js';
+import { loadSave, hasUpgrade } from '../save.js';
 import { sfx } from '../audio.js';
 
 /* ---------- shared bits ---------- */
@@ -389,7 +389,7 @@ function fireOnBeat(pulsar, need = 3) {
     ui.setObjective('💥 Tap FIRE when the ring turns GREEN!');
 
     const PERIOD = 1500;          // ms per beat — slow enough for a 6-year-old
-    const WIN = 0.16;             // open window as a fraction of the period (generous)
+    const WIN = hasUpgrade('slowmo') ? 0.26 : 0.16;   // Slow-Mo Targeting upgrade widens the window
     let open = false, raf = 0, t0 = performance.now();
     const fast = new URLSearchParams(location.search).has('fast');
 

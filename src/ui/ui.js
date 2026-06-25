@@ -7,6 +7,7 @@ import { speak, stopSpeaking } from '../speech.js';
 import { sfx } from '../audio.js';
 import { CARDS, CLUES } from '../content.js';
 import { SCIENCE_BANK } from '../edu/science.js';
+import { openSuitLab } from './suit.js';
 
 const root = () => document.getElementById('ui');
 
@@ -76,6 +77,9 @@ export function buildHUD(game) {
   left.append(beacons, bits, strikes);
 
   const right = el('div', 'hud-group');
+  const suitBtn = el('button', 'hud-btn', '🧰');
+  suitBtn.title = 'Suit Lab — spend your stars on ship upgrades';
+  suitBtn.onclick = () => { sfx.open(); openSuitLab(() => refreshHUD()); };
   const journalBtn = el('button', 'hud-btn', '📔');
   journalBtn.title = 'Star Journal';
   journalBtn.onclick = () => { sfx.open(); showJournal(); };
@@ -86,7 +90,7 @@ export function buildHUD(game) {
   gear.addEventListener('pointerdown', startHold);
   gear.addEventListener('pointerup', cancelHold);
   gear.addEventListener('pointerleave', cancelHold);
-  right.append(journalBtn, gear);
+  right.append(suitBtn, journalBtn, gear);
 
   hud.append(left, right);
   root().appendChild(hud);

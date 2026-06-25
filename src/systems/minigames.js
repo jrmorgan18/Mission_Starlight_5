@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { makeTextSprite, makeGlowSprite, makeCrystal, makeBeacon } from '../world/builders.js';
 import * as ui from '../ui/ui.js';
 import { sfx } from '../audio.js';
+import { hasUpgrade } from '../save.js';
 
 /** Wait until the hero reaches ANY of the listed interactives; resolves its id. */
 export function tapAny(scene, ids) {
@@ -579,6 +580,7 @@ export function energyCatch(target = 8) {
     const fill = wrap.querySelector('.eg-fill');
 
     let caught = 0, spawnTimer = 0, done = false;
+    const orbLife = hasUpgrade('gloves') ? 1700 : 1150;   // Energy Gloves upgrade: orbs linger
     const timers = new Set();
     const render = () => { fill.style.width = `${Math.round((caught / target) * 100)}%`; };
 
@@ -610,7 +612,7 @@ export function energyCatch(target = 8) {
       };
       field.appendChild(orb);
       requestAnimationFrame(() => orb.classList.add('show'));
-      const life = setTimeout(() => { if (!orb.dataset.gone) { orb.classList.remove('show'); setTimeout(() => orb.remove(), 200); } }, 1150);
+      const life = setTimeout(() => { if (!orb.dataset.gone) { orb.classList.remove('show'); setTimeout(() => orb.remove(), 200); } }, orbLife);
       timers.add(life);
     };
 
