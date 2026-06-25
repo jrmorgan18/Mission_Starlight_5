@@ -4,7 +4,7 @@
 // Earth. Dialogue lines carry stamp:'real'|'magic' for Bolt's fact-checker.
 import * as THREE from 'three';
 import { WorldScene } from './worldScene.js';
-import { echoBlinks, energyCatch, matchPairs, animate } from './minigames.js';
+import { echoBlinks, energyCatch, matchPairs, programRobot, spaceWalkRepair, manualLanding, animate } from './minigames.js';
 import { keystoneJigsaw } from './jigsaw.js';
 import { EarthScene } from '../earth/earthScene.js';
 import { HyperspaceScene } from '../hyperspace/hyperspace.js';
@@ -70,6 +70,7 @@ async function closeScene(game, scene) { await ui.fade(true); scene.dispose(); }
 
 /* a quick hyperspace flight (used by chapters that fly themselves) */
 async function flyTo(game, destName) {
+  await game.jumpCalc(destName);
   await ui.fade(true);
   const ride = new HyperspaceScene(game, destName);
   game.setScene(ride);
@@ -266,9 +267,13 @@ export async function chapterMachine(game) {
   await ui.giveCard('machine');
   await askReadingSet('machine', 2);
 
-  await ui.dialogue([{ who: 'machine', text: 'LET US CALCULATE THE AIM. SOLVE WITH ME.' }]);
-  for (let i = 0; i < 3; i++) {
-    await askMath(['addition', 'subtraction', 'multiplication'][i], { label: `AIMING THE DEFLECTOR ${i + 1} OF 3`, icon: '🎯', gauge: { current: i, total: 3, icon: '🎯' } });
+  // program a helper robot to reach its power core (a coding/sequencing puzzle)
+  await ui.dialogue([{ who: 'machine', text: 'FIRST, WAKE MY HELPER. WRITE IT A PATH TO ITS POWER CORE — TAP THE ARROWS, THEN RUN.' }]);
+  await programRobot();
+
+  await ui.dialogue([{ who: 'machine', text: 'GOOD. NOW LET US CALCULATE THE AIM. SOLVE WITH ME.' }]);
+  for (let i = 0; i < 2; i++) {
+    await askMath(['addition', 'multiplication'][i], { label: `AIMING THE DEFLECTOR ${i + 1} OF 2`, icon: '🎯', gauge: { current: i, total: 2, icon: '🎯' } });
   }
   await askScience('machine');
   await ui.giveClue('ls6');
@@ -462,6 +467,21 @@ export async function chapterFold(game) {
   ]);
   await askReadingSet('fold', 2);
   await ui.giveClue('ls10');
+
+  // SURPRISE: the fold fried a panel and the autopilot's down — fix her by hand!
+  await ui.dialogue([
+    { who: 'signal', text: 'WARNING — WARNING — HULL BREACH — AUTOPILOT OFFLINE —' },
+    { who: 'bolt', text: 'RED ALERT! That fold fried a power panel, and we\'re coming in HOT! Cadet — suit up, we have to fix her by hand. Out the airlock — GO!' }
+  ]);
+  await spaceWalkRepair(game.lowDetail ? 4 : 5);
+  await ui.dialogue([
+    { who: 'luma', text: 'Panel sealed — nice work out there! But the autopilot\'s still down. You\'ll have to land her YOURSELF. Steady hands, Cadet...' }
+  ]);
+  await manualLanding();
+  await ui.dialogue([
+    { who: 'bolt', text: 'TOUCHDOWN! Smooth as butter. THAT, Cadet, is how a real pilot comes home. *beep* ...Phew.' }
+  ]);
+
   await ui.fade(true);
   fold.dispose();
 

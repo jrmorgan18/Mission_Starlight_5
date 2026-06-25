@@ -623,6 +623,176 @@ export function energyCatch(target = 8) {
   });
 }
 
+/* ============ Program the Helper Robot (the Machine Mind) ============
+   Write a little program — tap arrow commands to queue a path — then RUN to
+   send the robot across the grid to its power core. A real coding/sequencing
+   puzzle. Wrong path just resets; never fails. */
+export function programRobot() {
+  return new Promise((resolve) => {
+    const COLS = 4, ROWS = 3;
+    const start = { c: 0, r: 2 }, goal = { c: 2, r: 0 };   // needs →→↑↑ (order-flexible)
+    let pos = { ...start }, queue = [], running = false;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'screen dim';
+    wrap.id = 'program-game';
+    wrap.innerHTML =
+      '<div class="pg-title">🤖 Program the robot — write its path to the core, then RUN!</div>' +
+      '<div class="pg-grid"></div>' +
+      '<div class="pg-queue"></div>' +
+      '<div class="pg-cmds">' +
+      '<button class="pg-cmd" data-d="right">➡️</button>' +
+      '<button class="pg-cmd" data-d="up">⬆️</button>' +
+      '<button class="pg-run">▶ RUN</button>' +
+      '<button class="pg-clear">↺</button>' +
+      '</div>';
+    document.getElementById('ui').appendChild(wrap);
+    const grid = wrap.querySelector('.pg-grid');
+    const qEl = wrap.querySelector('.pg-queue');
+
+    const cells = [];
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'pg-cell';
+      if (c === goal.c && r === goal.r) cell.classList.add('goal');
+      grid.appendChild(cell);
+      cells.push(cell);
+    }
+    const draw = () => {
+      cells.forEach((cell, i) => {
+        const c = i % COLS, r = Math.floor(i / COLS);
+        cell.textContent = (c === goal.c && r === goal.r) ? '🔋' : '';
+        if (c === pos.c && r === pos.r) cell.textContent = '🤖';
+      });
+      qEl.innerHTML = '';
+      for (const d of queue) { const chip = document.createElement('span'); chip.className = 'pg-chip'; chip.textContent = d === 'right' ? '➡️' : '⬆️'; qEl.appendChild(chip); }
+    };
+    draw();
+
+    const finish = () => { sfx.fanfare?.(); wrap.remove(); window.__programSolve = undefined; resolve(); };
+
+    const run = async () => {
+      if (running || !queue.length) return;
+      running = true;
+      pos = { ...start }; draw();
+      for (const d of queue) {
+        if (d === 'right') pos.c = Math.min(COLS - 1, pos.c + 1);
+        else pos.r = Math.max(0, pos.r - 1);
+        sfx.tap?.(); draw();
+        await animate(320, () => {});
+      }
+      if (pos.c === goal.c && pos.r === goal.r) { sfx.shard?.(); setTimeout(finish, 300); }
+      else { sfx.bump?.(); wrap.querySelector('.pg-title').textContent = 'Beep! Not at the core yet — try again!'; queue = []; pos = { ...start }; setTimeout(() => { draw(); running = false; }, 600); }
+    };
+
+    wrap.querySelectorAll('.pg-cmd').forEach((b) => b.onclick = () => { if (running) return; queue.push(b.dataset.d); sfx.tap?.(); draw(); });
+    wrap.querySelector('.pg-clear').onclick = () => { if (running) return; queue = []; pos = { ...start }; sfx.tap?.(); draw(); };
+    wrap.querySelector('.pg-run').onclick = run;
+    window.__programSolve = () => { queue = ['right', 'right', 'up', 'up']; run(); };   // test hook
+  });
+}
+
+/* ============ Space Walk Repair (the homecoming malfunction) ============
+   Sparks burst on the hull — tap each one to seal it. Repair them all to fix
+   the ship. A reaction/repair game. */
+export function spaceWalkRepair(spots = 5) {
+  return new Promise((resolve) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'screen dim';
+    wrap.id = 'repair-game';
+    wrap.innerHTML = '<div class="rp-title">🛠️ Emergency repair! Tap every sparking spot to seal the hull!</div><div class="rp-hull"></div><div class="rp-count"></div>';
+    document.getElementById('ui').appendChild(wrap);
+    const hull = wrap.querySelector('.rp-hull');
+    const count = wrap.querySelector('.rp-count');
+    let fixed = 0;
+    const render = () => { count.textContent = `Sealed: ${fixed} / ${spots}`; };
+    const finish = () => { sfx.fanfare?.(); wrap.remove(); window.__repairSolve = undefined; resolve(); };
+    const nodes = [];
+    for (let i = 0; i < spots; i++) {
+      const s = document.createElement('button');
+      s.className = 'rp-spark';
+      s.style.left = `${12 + Math.random() * 76}%`;
+      s.style.top = `${14 + Math.random() * 68}%`;
+      s.textContent = '⚡';
+      s.onclick = () => {
+        if (s.dataset.fixed) return;
+        s.dataset.fixed = '1'; s.classList.add('fixed'); s.textContent = '✅';
+        fixed++; sfx.collect?.(); render();
+        if (fixed >= spots) setTimeout(finish, 350);
+      };
+      hull.appendChild(s); nodes.push(s);
+    }
+    render();
+    window.__repairSolve = () => { nodes.forEach((s) => s.click()); };   // test hook
+  });
+}
+
+/* ============ Manual Landing (the homecoming malfunction) ============
+   The autopilot is down — steer the descending ship to stay over the landing
+   pad as a crosswind pushes it. Touch down centered to land safe. */
+export function manualLanding() {
+  return new Promise((resolve) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'screen dim';
+    wrap.id = 'landing-game';
+    wrap.innerHTML =
+      '<div class="ld-title">🚀 Manual landing! Keep the ship over the pad as it comes down!</div>' +
+      '<div class="ld-field"><div class="ld-ship">🚀</div><div class="ld-pad"></div></div>' +
+      '<div class="ld-alt"><div class="ld-altfill"></div></div>' +
+      '<div class="ld-cmds"><button class="ld-btn" data-d="-1">◀</button><button class="ld-btn" data-d="1">▶</button></div>';
+    document.getElementById('ui').appendChild(wrap);
+    const shipEl = wrap.querySelector('.ld-ship');
+    const altFill = wrap.querySelector('.ld-altfill');
+    const title = wrap.querySelector('.ld-title');
+
+    let shipX = 50, drift = (Math.random() < 0.5 ? -1 : 1) * 8, alt = 100, landed = false, raf = 0, last = performance.now();
+    const fast = new URLSearchParams(location.search).has('fast');
+    const PAD_HALF = 16;   // pad half-width in %
+
+    const place = () => {
+      shipX = Math.max(4, Math.min(96, shipX));
+      shipEl.style.left = `${shipX}%`;
+      shipEl.style.bottom = `${10 + alt * 0.78}%`;
+      altFill.style.height = `${alt}%`;
+    };
+    place();
+
+    const finish = (ok) => {
+      cancelAnimationFrame(raf);
+      if (ok) { clearInterval(steer); window.__landSolve = undefined; sfx.land?.(); title.textContent = '🎉 Smooth landing — welcome home!'; setTimeout(() => { wrap.remove(); resolve(); }, 900); }
+      else { sfx.bump?.(); title.textContent = '😅 Bumpy! Bringing her back up — try again!'; alt = 100; shipX = 50; drift = (Math.random() < 0.5 ? -1 : 1) * 8; landed = false; place(); raf = requestAnimationFrame(loop); }
+    };
+
+    const loop = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.05); last = now;
+      // gentle wandering crosswind
+      drift += (Math.random() - 0.5) * 10 * dt;
+      drift = Math.max(-14, Math.min(14, drift));
+      shipX += drift * dt;
+      alt -= (fast ? 60 : 14) * dt;
+      if (alt <= 0 && !landed) { landed = true; alt = 0; place(); finish(Math.abs(shipX - 50) <= PAD_HALF); return; }
+      place();
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    let held = 0;
+    wrap.querySelectorAll('.ld-btn').forEach((b) => {
+      const d = Number(b.dataset.d);
+      const press = (e) => { e.preventDefault?.(); held = d; b.classList.add('held'); };
+      const release = () => { held = 0; b.classList.remove('held'); };
+      b.addEventListener('pointerdown', press, { passive: false });
+      b.addEventListener('pointerup', release);
+      b.addEventListener('pointerleave', release);
+      b.addEventListener('pointercancel', release);
+      b.onclick = () => { shipX += d * 7; place(); };   // taps nudge too
+    });
+    // continuous steer while held
+    const steer = setInterval(() => { if (held) { shipX += held * 1.1; place(); } }, 32);
+    window.__landSolve = () => { shipX = 50; alt = 1; drift = 0; place(); };   // test hook: center + nearly down
+  });
+}
+
 /* ============ Match the Coalition (the Architects) ============
    Tap a gift on the left, then the civilization that provides it on the right.
    A matching game that teaches the coalition plan. */

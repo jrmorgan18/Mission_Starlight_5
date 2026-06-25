@@ -716,6 +716,42 @@ button { font-family: var(--font); cursor: pointer; border: none; }
 .eg-bar { width: min(86vw, 560px); height: 22px; border-radius: 999px; background: rgba(8,12,28,0.7); border: 2px solid rgba(255,200,90,0.5); overflow: hidden; }
 .eg-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ffd06a, #ff8a3a); box-shadow: 0 0 16px rgba(255,170,80,0.8); transition: width 0.18s ease; }
 
+/* ---------- Program the Robot (Machine Mind) ---------- */
+.pg-title { font-size: clamp(16px, 3vw, 23px); font-weight: 900; color: #6fe0ff; text-shadow: 0 0 12px rgba(92,232,255,0.5); text-align: center; padding: 0 16px; }
+.pg-grid { display: grid; grid-template-columns: repeat(4, 64px); grid-template-rows: repeat(3, 64px); gap: 6px; margin: 14px 0; }
+.pg-cell { border: 2px solid rgba(92,232,255,0.35); border-radius: 10px; background: rgba(10,26,40,0.6); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.pg-cell.goal { border-color: #5cff9d; box-shadow: inset 0 0 14px rgba(92,255,157,0.4); }
+.pg-queue { display: flex; gap: 5px; min-height: 34px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: 86vw; }
+.pg-chip { font-size: 24px; }
+.pg-cmds { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+.pg-cmd { width: 60px; height: 60px; border-radius: 14px; font-size: 30px; background: rgba(92,232,255,0.15); border: 3px solid rgba(92,232,255,0.6); }
+.pg-run { padding: 14px 26px; border-radius: 999px; font-size: 20px; font-weight: 900; color: #062536; background: radial-gradient(circle at 35% 30%, #bfffd0, #5cff9d 70%, #2dbf6d); border: 3px solid rgba(92,255,157,0.7); }
+.pg-clear { width: 56px; height: 56px; border-radius: 14px; font-size: 24px; background: rgba(255,140,90,0.2); border: 3px solid rgba(255,140,90,0.6); color: #ffd0b0; }
+
+/* ---------- Space Walk Repair ---------- */
+.rp-title { font-size: clamp(16px, 3vw, 23px); font-weight: 900; color: #ffd06a; text-shadow: 0 0 12px rgba(255,200,90,0.5); text-align: center; padding: 0 16px; }
+.rp-hull { position: relative; width: min(86vw, 540px); height: min(48vh, 330px); margin: 14px 0; border-radius: 18px; border: 3px solid rgba(150,170,210,0.5);
+  background: radial-gradient(circle at 50% 40%, #2e3a52, #161e30 80%); overflow: hidden; }
+.rp-spark { position: absolute; width: 54px; height: 54px; transform: translate(-50%,-50%); border-radius: 50%; border: none; font-size: 30px;
+  background: radial-gradient(circle at 40% 35%, #fff0c0, #ff6a3a 65%, #c02810); box-shadow: 0 0 18px rgba(255,120,40,0.9); animation: rpspark 0.5s ease-in-out infinite alternate; }
+@keyframes rpspark { from { transform: translate(-50%,-50%) scale(0.85); } to { transform: translate(-50%,-50%) scale(1.15); } }
+.rp-spark.fixed { background: radial-gradient(circle at 40% 35%, #d8ffe8, #5cff9d 70%, #2dbf6d); box-shadow: 0 0 14px rgba(92,255,157,0.7); animation: none; }
+.rp-count { font-size: 17px; font-weight: 900; color: #cfe0ff; }
+
+/* ---------- Manual Landing ---------- */
+.ld-title { font-size: clamp(15px, 2.8vw, 22px); font-weight: 900; color: #aef2ff; text-shadow: 0 0 10px rgba(92,232,255,0.5); text-align: center; padding: 0 16px; }
+.ld-field { position: relative; width: min(86vw, 480px); height: min(46vh, 320px); margin: 12px 0; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(#0a1430 0%, #16335a 60%, #2a5a86 100%); border: 3px solid rgba(92,232,255,0.4); }
+.ld-ship { position: absolute; transform: translateX(-50%); font-size: 38px; transition: left 0.06s linear, bottom 0.06s linear; }
+.ld-pad { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); width: 32%; height: 14px; border-radius: 8px;
+  background: repeating-linear-gradient(90deg, #ffd95c 0 12px, #1a1a1a 12px 24px); box-shadow: 0 0 16px rgba(255,217,92,0.6); }
+.ld-alt { width: min(86vw, 480px); height: 14px; border-radius: 999px; background: rgba(8,12,28,0.7); border: 2px solid rgba(92,232,255,0.5); overflow: hidden; transform: scaleX(1); }
+.ld-altfill { width: 100%; height: 100%; background: linear-gradient(90deg, #5cff9d, #ffd95c, #ff6a3a); }
+.ld-cmds { display: flex; gap: 40px; margin-top: 12px; }
+.ld-btn { width: 78px; height: 78px; border-radius: 50%; font-size: 32px; color: #062536;
+  background: radial-gradient(circle at 35% 30%, #aef2ff, #5ce8ff 60%, #2fb9d6); border: 4px solid rgba(92,232,255,0.6); touch-action: none; }
+.ld-btn.held { transform: scale(0.94); box-shadow: 0 0 30px rgba(92,232,255,0.8); }
+
 /* ---------- Match the Coalition (Architects) ---------- */
 .mp-title { font-size: clamp(17px, 3vw, 24px); font-weight: 900; color: #c8a8ff; text-shadow: 0 0 12px rgba(154,122,255,0.5); text-align: center; padding: 0 16px; }
 .mp-row { display: flex; gap: clamp(18px, 8vw, 70px); margin-top: 16px; }

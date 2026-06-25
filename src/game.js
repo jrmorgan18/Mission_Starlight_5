@@ -8,6 +8,7 @@ import { makePulsar, makeDysonSphere } from './showpieces/cosmic.js';
 import { runEarthSlice } from './earth/earthScene.js';
 import { HyperspaceScene } from './hyperspace/hyperspace.js';
 import { Pipeline } from './fx/post.js';
+import { pickMath } from './edu/engine.js';
 import * as ui from './ui/ui.js';
 import { openParentZone } from './ui/parent.js';
 import { sfx } from './audio.js';
@@ -107,12 +108,29 @@ export class Game {
     }
   }
 
+  /** Jump calculations: a quick math gate before every hyperspace run, so the
+   *  course is plotted true. (Reused by the starbow flight in chapter 1 too.) */
+  async jumpCalc(dest) {
+    await ui.dialogue([
+      { who: 'bolt', text: `Plotting the jump to ${dest}, Cadet — but a near-light-speed course needs JUMP CALCULATIONS. Solve them true!` }
+    ]);
+    const skills = ['addition', 'subtraction', 'multiplication'];
+    for (let i = 0; i < 2; i++) {
+      const skill = skills[((this._jumpN = (this._jumpN || 0) + 1)) % skills.length];
+      await ui.askQuestion(pickMath(skill), {
+        contextLabel: `JUMP CALCULATION ${i + 1} OF 2`, icon: '🧮',
+        gauge: { current: i, total: 2, icon: '🌀' }
+      });
+    }
+  }
+
   /** Transition INTO a chapter: a near-light-speed star-flight (the starbow), or
    *  a simple fade. The chapter script then builds its own scene. */
   async arrive(ch) {
     if (ch.arrival === 'self') return;
     if (ch.arrival === 'jump') {
       if (ui.isFaded()) await this.toBackdrop();
+      await this.jumpCalc(ch.name);
       await ui.dialogue([
         { who: 'luma', text: `Course locked on ${ch.name}! Ride the starbow, Cadet — steer with the joystick, hold LIGHTSPEED, and catch the ⭐ stars!` }
       ]);
