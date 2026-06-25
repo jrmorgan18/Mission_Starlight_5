@@ -42,6 +42,9 @@ function defaultSave() {
     factsLearned: [],    // science fact ids seen (right OR wrong) for the databank
     samples: 0,          // Mars samples collected (drives a prize)
     suit: {},            // owned suit-upgrade ids -> true
+    shipDays: 0,         // time dilation: days passed for the cadet
+    earthYears: 0,       // ...vs years passed back on Earth
+    timeFolded: false,   // the Machine Mind's gift re-synced the clocks at the end
     parent: { prizes: DEFAULT_PRIZES, soundOn: true, musicOn: true, difficultyOffset: 0, quality: 'auto', oopsLimit: DEFAULT_OOPS_LIMIT },
     minutesPlayed: 0,
     seenIntro: false

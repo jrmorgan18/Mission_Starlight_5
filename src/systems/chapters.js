@@ -76,6 +76,7 @@ async function flyTo(game, destName) {
   await ride.run();
   ride.dispose();
   ui.countJump();
+  ui.advanceTime(1, 4);
 }
 
 /* ============================================================
@@ -286,6 +287,7 @@ export async function chapterTimetoll(game) {
     { who: 'bolt', text: 'Building a galaxy-sized deflector takes a long, long time. We race between the worlds, near light-speed, carrying pieces and plans...' },
     { who: 'luma', text: 'And every fast trip that saves the build... costs us years back home.' }
   ]);
+  ui.advanceTime(50, 80);   // the long build: a couple of months for us, lifetimes for Earth
   await timeWarp('A few months', 'Many years', 'The build is working — but look how much time has passed on Earth.');
 
   await ui.dialogue([
@@ -440,6 +442,7 @@ export async function chapterFold(game) {
     { who: 'machine', text: 'WAIT, SMALL WARM ONE. YOU SAVED A WORLD AND LOST YOUR OWN YEARS. ACCEPT MY LAST GIFT: A WAY TO FOLD SPACE-TIME...' },
     { who: 'machine', text: '...SO YOU ARRIVE HOME ONLY MONTHS AFTER YOU LEFT. GO. BE WITH THE ONES YOU LOVE, IN YOUR OWN TIME.' }
   ]);
+  ui.foldTime();   // the gift: the HUD clocks re-sync — back in our own time
   await timeWarp('Months', 'Months', 'Time folds back into step. Ship-time and Earth-time, together again at last. 🏡');
 
   // homecoming over the real Earth

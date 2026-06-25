@@ -123,6 +123,7 @@ export class Game {
       await ride.run();
       ride.dispose();
       ui.countJump();
+      ui.advanceTime(1, 4);   // near-light-speed: a day for us, years for Earth
       return;
     }
     await ui.fade(true);   // plain montage-style arrival

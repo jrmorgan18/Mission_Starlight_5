@@ -63,7 +63,9 @@ export function buildHUD(game) {
   const hud = el('div');
   hud.id = 'hud';
 
-  const left = el('div', 'hud-group');
+  // left side stacks: a row of pills, then the persistent time-dilation clocks
+  const left = el('div', 'hud-left');
+  const pills = el('div', 'hud-group');
   const beacons = el('div', 'hud-pill');
   beacons.append('🕵️', el('span', '', '0'));   // mystery clues discovered
   beacons.title = 'Story clues discovered';
@@ -74,7 +76,24 @@ export function buildHUD(game) {
   strikes.title = 'Oops meter — too many wrong answers and we zoom back a planet to practice';
   const strikeDots = Array.from({ length: oopsLimit() }, () => el('span', 'strike-dot'));
   strikes.append('💭', ...strikeDots);
-  left.append(beacons, bits, strikes);
+  pills.append(beacons, bits, strikes);
+
+  // time-dilation clocks: ship-time vs Earth-time, ticking the whole game
+  const clocks = el('div', 'hud-clocks');
+  clocks.title = 'Time dilation — your clock vs Earth\'s clock';
+  const mkClock = (icon, handCls) => {
+    const c = el('div', 'hud-clock');
+    const face = el('div', 'hud-clockface');
+    const hand = el('div', 'hud-hand ' + handCls);
+    face.appendChild(hand);
+    const label = el('span', 'hud-clocklabel', '0');
+    c.append(face, el('span', 'hud-clockicon', icon), label);
+    return { c, hand, label };
+  };
+  const shipClock = mkClock('🚀', 'ship');
+  const earthClock = mkClock('🌍', 'earth');
+  clocks.append(shipClock.c, earthClock.c);
+  left.append(pills, clocks);
 
   const right = el('div', 'hud-group');
   const suitBtn = el('button', 'hud-btn', '🧰');
@@ -107,7 +126,25 @@ export function buildHUD(game) {
   const fade = el('div', 'fade-overlay');
   root().appendChild(fade);
 
-  hudEls = { hud, beacons: beacons.lastChild, bits: bits.lastChild, strikes, strikeDots, objective, toasts, fade };
+  hudEls = { hud, beacons: beacons.lastChild, bits: bits.lastChild, strikes, strikeDots, objective, toasts, fade, shipClock, earthClock };
+  refreshHUD();
+}
+
+/** Advance the time-dilation clocks: a little ship-time, a lot of Earth-time. */
+export function advanceTime(shipDays, earthYears) {
+  const s = loadSave();
+  s.shipDays = (s.shipDays || 0) + shipDays;
+  s.earthYears = (s.earthYears || 0) + earthYears;
+  s.timeFolded = false;
+  save();
+  refreshHUD();
+}
+
+/** The Machine Mind's gift: fold time so the cadet is back in their own time. */
+export function foldTime() {
+  const s = loadSave();
+  s.timeFolded = true;
+  save();
   refreshHUD();
 }
 
@@ -125,6 +162,20 @@ export function refreshHUD() {
   }
   const miss = s.missCount || 0;
   hudEls.strikeDots.forEach((d, i) => d.classList.toggle('filled', i < miss));
+
+  // time-dilation clocks
+  if (hudEls.shipClock) {
+    const ship = s.shipDays || 0, earth = s.earthYears || 0;
+    if (s.timeFolded) {
+      hudEls.shipClock.label.textContent = 'home';
+      hudEls.earthClock.label.textContent = 'home';
+    } else {
+      hudEls.shipClock.label.textContent = ship < 1 ? '0' : (ship < 60 ? `${Math.round(ship)}d` : `${(ship / 30).toFixed(0)}mo`);
+      hudEls.earthClock.label.textContent = `${Math.round(earth)}y`;
+    }
+    hudEls.shipClock.hand.style.transform = `translateX(-50%) rotate(${ship * 30}deg)`;
+    hudEls.earthClock.hand.style.transform = `translateX(-50%) rotate(${earth * 90}deg)`;
+  }
 }
 
 /** Thrown out of askQuestion when the 3rd cumulative miss should send the player back a planet. */
