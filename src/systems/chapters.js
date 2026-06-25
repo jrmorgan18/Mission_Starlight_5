@@ -335,32 +335,72 @@ export async function chapterDeflect(game) {
   await closeScene(game, scene);
 }
 
-/** Press FIRE when the pulsar flashes bright. Kid-friendly: missing just waits. */
-function fireOnBeat(pulsar) {
+/** Lock-on rhythm: a shrinking ring telegraphs the beat. Tap FIRE when the ring
+ *  closes onto the target and everything turns GREEN ("FIRE NOW!"). The sky
+ *  pulsar flashes in sync. Need NEED good hits. Misses never punish, just coach. */
+function fireOnBeat(pulsar, need = 3) {
   return new Promise((resolve) => {
+    // pause the pulsar's own flash so the sky + the on-screen ring agree
+    const savedUpdate = pulsar.userData.update;
+    pulsar.userData.update = (dt) => { pulsar.userData.beams.rotation.y += dt * 2; };
+    const core = pulsar.userData.core;
+
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:absolute;left:50%;bottom:22%;transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;align-items:center;gap:10px;';
-    const hint = document.createElement('div');
-    hint.style.cssText = 'font-size:18px;font-weight:900;color:#aef2ff;text-shadow:0 0 10px rgba(92,232,255,0.5);';
-    hint.textContent = 'Fire when the pulsar FLASHES! 💥';
-    const btn = document.createElement('button');
-    btn.className = 'big-btn cyan';
-    btn.textContent = '🔥 FIRE!';
-    wrap.append(hint, btn);
+    wrap.id = 'beat-wrap';
+    wrap.innerHTML =
+      '<div class="beat-hint">Watch the ring close in...</div>' +
+      '<div class="beat-target"><div class="beat-incoming"></div><div class="beat-go">FIRE<br>NOW!</div></div>' +
+      '<div class="beat-dots"></div>' +
+      '<button class="beat-btn">🔥 FIRE!</button>';
     document.getElementById('ui').appendChild(wrap);
-    ui.setObjective('💥 Watch the pulsar — fire on the bright flash!');
+    const incoming = wrap.querySelector('.beat-incoming');
+    const hint = wrap.querySelector('.beat-hint');
+    const btn = wrap.querySelector('.beat-btn');
+    const dotsEl = wrap.querySelector('.beat-dots');
+    let hits = 0;
+    const renderDots = () => { dotsEl.innerHTML = ''; for (let i = 0; i < need; i++) { const d = document.createElement('span'); d.className = 'beat-dot' + (i < hits ? ' on' : ''); dotsEl.appendChild(d); } };
+    renderDots();
+    ui.setObjective('💥 Tap FIRE when the ring turns GREEN!');
+
+    const PERIOD = 1500;          // ms per beat — slow enough for a 6-year-old
+    const WIN = 0.16;             // open window as a fraction of the period (generous)
+    let open = false, raf = 0, t0 = performance.now();
+    const fast = new URLSearchParams(location.search).has('fast');
+
+    const loop = (now) => {
+      const phase = ((now - t0) % PERIOD) / PERIOD;      // 0..1; beat at phase→1
+      const scale = 1 + (1 - phase) * 1.9;               // ring shrinks 2.9 → 1.0
+      incoming.style.transform = `translate(-50%,-50%) scale(${scale})`;
+      open = phase > (1 - WIN) || phase < WIN * 0.3;      // window straddling the close
+      wrap.classList.toggle('go', open);
+      core.material.emissiveIntensity = open ? 6 : 1.6;   // sky pulsar flashes in sync
+      if (open && hint.textContent !== 'FIRE NOW!') hint.textContent = 'FIRE NOW! 💥';
+      else if (!open && phase < 0.5 && hint.textContent !== 'Get ready...') hint.textContent = 'Get ready...';
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    const finish = () => {
+      cancelAnimationFrame(raf);
+      pulsar.userData.update = savedUpdate;
+      ui.setObjective('');
+      wrap.remove();
+      resolve();
+    };
     btn.onclick = () => {
-      const flash = pulsar.userData.flash || 0;
-      if (flash > 0.5) {
+      if (open || fast) {       // ?fast lets the smoke test always succeed
+        hits++;
+        renderDots();
         sfx.shard?.();
-        ui.setObjective('');
-        wrap.remove();
-        resolve();
+        wrap.classList.add('hitflash');
+        setTimeout(() => wrap.classList.remove('hitflash'), 200);
+        if (hits >= need) { setTimeout(finish, 250); }
       } else {
         sfx.bump?.();
-        hint.textContent = 'Not yet — wait for the bright flash!';
+        hint.textContent = 'Too soon — wait for GREEN!';
       }
     };
+    window.__fireOnBeat = () => btn.click();   // test hook
   });
 }
 
