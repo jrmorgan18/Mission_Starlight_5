@@ -10,6 +10,7 @@ import { EarthScene } from '../earth/earthScene.js';
 import { HyperspaceScene } from '../hyperspace/hyperspace.js';
 import { makePulsar, makeDysonSphere } from '../showpieces/cosmic.js';
 import { timeWarp } from '../showpieces/timeclocks.js';
+import { FoldJourneyScene } from '../showpieces/foldjourney.js';
 import { makeAlien, makeLuma, makeArchitect, makeRobot, makeKid, makeRock, makeShip, makeGlowSprite, makeStarfield, makeTree, makeGrassField, makeCrystal, makeNebulaCloud, makePylon, makeMonolith, makePanelArray } from '../world/builders.js';
 import { sagaStatus } from '../saga.js';
 import * as ui from '../ui/ui.js';
@@ -445,18 +446,24 @@ export async function chapterFold(game) {
   ui.foldTime();   // the gift: the HUD clocks re-sync — back in our own time
   await timeWarp('Months', 'Months', 'Time folds back into step. Ship-time and Earth-time, together again at last. 🏡');
 
-  // homecoming over the real Earth
-  const earth = new EarthScene(game, { showFps: false });
-  game.setScene(earth);
-  game.pipeline.setBloom(0.7, 0.5, 0.6);
+  // THE FINAL JOURNEY: a space-time fold that opens onto Earth (cinematic)
+  await ui.dialogue([
+    { who: 'bolt', text: 'Hold on, Cadet — the Machine Mind is folding space-time itself. The stars are bending around us... here we go!' }
+  ]);
+  await ui.fade(true);
+  const fold = new FoldJourneyScene(game);
+  game.setScene(fold);
+  game.pipeline.setBloom(1.0, 0.6, 0.6);
   await ui.fade(false);
+  await fold.run();   // vortex → flash → Earth swells out of the fold
+
   await ui.dialogue([
     { who: 'luma', text: 'There it is. Home — safe, blue, and waiting. And only a few months have passed. We made it, Cadet.' }
   ]);
   await askReadingSet('fold', 2);
   await ui.giveClue('ls10');
   await ui.fade(true);
-  earth.dispose();
+  fold.dispose();
 
   // --- school postscript ---
   const scene = await openScene(game, 'school');
