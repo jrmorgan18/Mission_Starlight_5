@@ -690,6 +690,30 @@ button { font-family: var(--font); cursor: pointer; border: none; }
 .tw-time { font-size: clamp(18px, 4vw, 26px); font-weight: 900; color: #ffd95c; }
 .tw-note { font-size: 15px; opacity: 0.9; max-width: 80vw; text-align: center; }
 
+/* ---------- Energy Catch (Dyson) ---------- */
+.eg-title { font-size: clamp(17px, 3vw, 24px); font-weight: 900; color: #ffd06a; text-shadow: 0 0 12px rgba(255,200,90,0.5); text-align: center; padding: 0 16px; }
+.eg-field { position: relative; width: min(86vw, 560px); height: min(46vh, 320px); margin: 12px 0; border: 3px solid rgba(255,200,90,0.4); border-radius: 16px; background: rgba(30,20,8,0.5); overflow: hidden; }
+.eg-orb {
+  position: absolute; width: 56px; height: 56px; border-radius: 50%; transform: translate(-50%,-50%) scale(0.2); opacity: 0;
+  background: radial-gradient(circle at 35% 30%, #fff3c8, #ffc24a 60%, #e0801e);
+  border: none; box-shadow: 0 0 22px rgba(255,200,90,0.8); transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.eg-orb.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+.eg-orb.pop { transform: translate(-50%,-50%) scale(1.6); opacity: 0; }
+.eg-bar { width: min(86vw, 560px); height: 22px; border-radius: 999px; background: rgba(8,12,28,0.7); border: 2px solid rgba(255,200,90,0.5); overflow: hidden; }
+.eg-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ffd06a, #ff8a3a); box-shadow: 0 0 16px rgba(255,170,80,0.8); transition: width 0.18s ease; }
+
+/* ---------- Match the Coalition (Architects) ---------- */
+.mp-title { font-size: clamp(17px, 3vw, 24px); font-weight: 900; color: #c8a8ff; text-shadow: 0 0 12px rgba(154,122,255,0.5); text-align: center; padding: 0 16px; }
+.mp-row { display: flex; gap: clamp(18px, 8vw, 70px); margin-top: 16px; }
+.mp-col { display: flex; flex-direction: column; gap: 12px; }
+.mp-btn {
+  min-width: 150px; padding: 14px 18px; border-radius: 14px; font-size: 17px; font-weight: 800;
+  background: rgba(90,74,142,0.5); border: 2px solid rgba(154,122,255,0.6); color: #efe8ff;
+}
+.mp-btn.sel { background: rgba(154,122,255,0.4); border-color: #ffd27a; box-shadow: 0 0 16px rgba(255,210,120,0.6); }
+.mp-btn.matched { background: rgba(92,255,157,0.25); border-color: #5cff9d; color: #d8ffe8; }
+
 /* ---------- Deflect: lock-on rhythm ---------- */
 #beat-wrap {
   position: absolute; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom));

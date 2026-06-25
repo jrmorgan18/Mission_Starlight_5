@@ -560,3 +560,118 @@ export async function beaconPickup(scene) {
   scene.scene.remove(beacon);
   scene.interactives.delete('the-beacon');
 }
+
+/* ============ Energy Catch (Dyson Sphere) ============
+   Glowing energy orbs pop up around the play field; tap them before they fade
+   to charge the power meter. Reach the target to fill the Dyson Sphere. A
+   reaction/attention game — far livelier than walking to pick up panels. */
+export function energyCatch(target = 8) {
+  return new Promise((resolve) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'screen dim';
+    wrap.id = 'energy-game';
+    wrap.innerHTML =
+      '<div class="eg-title">☀️ Catch the star\'s energy — tap the glowing orbs!</div>' +
+      '<div class="eg-field"></div>' +
+      '<div class="eg-bar"><div class="eg-fill"></div></div>';
+    document.getElementById('ui').appendChild(wrap);
+    const field = wrap.querySelector('.eg-field');
+    const fill = wrap.querySelector('.eg-fill');
+
+    let caught = 0, spawnTimer = 0, done = false;
+    const timers = new Set();
+    const render = () => { fill.style.width = `${Math.round((caught / target) * 100)}%`; };
+
+    const finish = () => {
+      if (done) return; done = true;
+      clearInterval(spawnTimer);
+      timers.forEach((t) => clearTimeout(t));
+      sfx.fanfare?.();
+      wrap.remove();
+      window.__energySolve = undefined;
+      resolve();
+    };
+
+    const spawnOrb = () => {
+      if (done) return;
+      const orb = document.createElement('button');
+      orb.className = 'eg-orb';
+      const r = field.getBoundingClientRect();
+      orb.style.left = `${10 + Math.random() * 80}%`;
+      orb.style.top = `${10 + Math.random() * 76}%`;
+      orb.onclick = () => {
+        if (orb.dataset.gone) return;
+        orb.dataset.gone = '1';
+        caught++; render();
+        sfx.collect?.();
+        orb.classList.add('pop');
+        setTimeout(() => orb.remove(), 150);
+        if (caught >= target) finish();
+      };
+      field.appendChild(orb);
+      requestAnimationFrame(() => orb.classList.add('show'));
+      const life = setTimeout(() => { if (!orb.dataset.gone) { orb.classList.remove('show'); setTimeout(() => orb.remove(), 200); } }, 1150);
+      timers.add(life);
+    };
+
+    spawnTimer = setInterval(spawnOrb, 720);
+    spawnOrb();
+    render();
+    window.__energySolve = () => { caught = target; render(); finish(); };   // test hook
+  });
+}
+
+/* ============ Match the Coalition (the Architects) ============
+   Tap a gift on the left, then the civilization that provides it on the right.
+   A matching game that teaches the coalition plan. */
+export function matchPairs(pairs, title = 'Match each gift to who provides it!') {
+  return new Promise((resolve) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'screen dim';
+    wrap.id = 'match-game';
+    wrap.innerHTML = `<div class="mp-title">${title}</div>`;
+    const row = document.createElement('div');
+    row.className = 'mp-row';
+    const colL = document.createElement('div'); colL.className = 'mp-col';
+    const colR = document.createElement('div'); colR.className = 'mp-col';
+    row.append(colL, colR);
+    wrap.appendChild(row);
+    document.getElementById('ui').appendChild(wrap);
+
+    const shuffle = (a) => a.map((x) => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map((p) => p[1]);
+    let selKey = null, selBtn = null, matched = 0, done = false;
+
+    const mkBtn = (col, key, label, side) => {
+      const b = document.createElement('button');
+      b.className = 'mp-btn';
+      b.textContent = label;
+      b.dataset.key = key; b.dataset.side = side;
+      col.appendChild(b);
+      return b;
+    };
+    for (const p of shuffle([...pairs])) mkBtn(colL, p.key, p.left, 'L');
+    for (const p of shuffle([...pairs])) mkBtn(colR, p.key, p.right, 'R');
+
+    const finish = () => { if (done) return; done = true; sfx.fanfare?.(); wrap.remove(); window.__matchSolve = undefined; resolve(); };
+    const lock = (key) => {
+      wrap.querySelectorAll(`.mp-btn[data-key="${key}"]`).forEach((b) => { b.classList.add('matched'); b.disabled = true; });
+      matched++;
+      if (matched >= pairs.length) setTimeout(finish, 350);
+    };
+
+    wrap.querySelectorAll('.mp-btn').forEach((b) => {
+      b.onclick = () => {
+        if (b.disabled) return;
+        if (b.dataset.side === 'L') {
+          selBtn?.classList.remove('sel');
+          selKey = b.dataset.key; selBtn = b; b.classList.add('sel'); sfx.tap?.();
+        } else {
+          if (!selKey) { sfx.tap?.(); return; }
+          if (b.dataset.key === selKey) { sfx.collect?.(); selBtn?.classList.remove('sel'); lock(selKey); selKey = null; selBtn = null; }
+          else { sfx.wrong?.(); b.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 200 }); selBtn?.classList.remove('sel'); selKey = null; selBtn = null; }
+        }
+      };
+    });
+    window.__matchSolve = () => { for (const p of pairs) lock(p.key); };   // test hook
+  });
+}

@@ -4,7 +4,7 @@
 // Earth. Dialogue lines carry stamp:'real'|'magic' for Bolt's fact-checker.
 import * as THREE from 'three';
 import { WorldScene } from './worldScene.js';
-import { collectParts, echoBlinks, animate } from './minigames.js';
+import { echoBlinks, energyCatch, matchPairs, animate } from './minigames.js';
 import { keystoneJigsaw } from './jigsaw.js';
 import { EarthScene } from '../earth/earthScene.js';
 import { HyperspaceScene } from '../hyperspace/hyperspace.js';
@@ -190,6 +190,14 @@ export async function chapterArchitects(game) {
   ]);
   await ui.giveCard('architect');
   await askReadingSet('architects', 2);
+
+  await ui.dialogue([{ who: 'architect', text: 'Study the plan, little one. Match each gift to the people who will bring it.' }]);
+  await matchPairs([
+    { key: 'power', left: '⚡ POWER', right: '☀️ Sun-Weavers' },
+    { key: 'aim', left: '🎯 AIM', right: '🤖 Machine Mind' },
+    { key: 'clock', left: '⏱️ CLOCK', right: '📡 The Pulsar' }
+  ], 'Match each gift to who provides it!');
+
   await askMath('addition', { label: 'BLUEPRINT MATH', icon: '📐' });
   await askScience('galaxy');
   await ui.giveClue('ls4');
@@ -217,19 +225,14 @@ export async function chapterDyson(game) {
   await scene.waitInteract('weaver');
   await ui.dialogue([
     { who: 'sunweaver', text: 'Welcome, traveler! Our star pours out more power than a million suns of machines could use. We will lend it to your deflector...' },
-    { who: 'sunweaver', text: '...if you help us hang the last panels. Gather them and bring them to the sphere!' }
+    { who: 'sunweaver', text: '...if you help us CHARGE the sphere. Tap the energy orbs the star throws off — catch as many as you can!' }
   ]);
   await ui.giveCard('dyson');
   await askReadingSet('dyson', 2);
 
-  const panelIds = ['pn1', 'pn2', 'pn3', 'pn4'];
-  panelIds.forEach((id, i) => {
-    const panel = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 0.1), new THREE.MeshStandardMaterial({ color: 0x2a3a6a, emissive: 0x3a5ab0, emissiveIntensity: 0.7, metalness: 0.6 }));
-    scene.place(panel, -11 + i * 7, -6, { id });
-  });
-  await collectParts(scene, panelIds, 'Gather the Dyson panels');
+  await energyCatch(game.lowDetail ? 7 : 9);
 
-  await ui.dialogue([{ who: 'bolt', text: 'Now figure the power — how much energy from how many panels?' }]);
+  await ui.dialogue([{ who: 'bolt', text: 'Sphere charging! Now figure the power — how much energy from how many panels?' }]);
   await askMath('multiplication', { label: 'POWER OUTPUT', icon: '☀️' });
   await askScience('dyson');
   await ui.giveClue('ls5');
