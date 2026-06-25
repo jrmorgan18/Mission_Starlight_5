@@ -2,6 +2,7 @@
 // roughness maps generated on canvas), emissive materials tuned for the bloom
 // pass, and the new cast — gate, lighthouse, elder star, and friends.
 import * as THREE from 'three';
+import { hasUpgrade } from '../save.js';
 
 function rand(min, max) { return min + Math.random() * (max - min); }
 
@@ -468,8 +469,14 @@ export function makeGrassField(count = 500, inner = 5, outer = 26) {
 
 export function makeShip() {
   const ship = new THREE.Group();
-  const hullMat = new THREE.MeshStandardMaterial({ color: 0xe8ecf5, roughness: 0.35, metalness: 0.55 });
-  const accentMat = new THREE.MeshStandardMaterial({ color: 0x8a5cff, roughness: 0.4, metalness: 0.4 });
+  // Starship Paint upgrade (game 5): a bold crimson racer paint job everywhere
+  // the ship appears — hull, accents, and engines.
+  const painted = hasUpgrade('paint');
+  const hullCol = painted ? 0xff2e63 : 0xe8ecf5;     // candy-apple hull when painted
+  const accentCol = painted ? 0xffd23b : 0x8a5cff;   // gold trim
+  const engineCol = painted ? 0xffa53a : 0x5ce8ff;   // hot orange engines
+  const hullMat = new THREE.MeshStandardMaterial({ color: hullCol, roughness: 0.35, metalness: 0.55 });
+  const accentMat = new THREE.MeshStandardMaterial({ color: accentCol, roughness: 0.4, metalness: 0.4 });
 
   const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.55, 1.6, 6, 14), hullMat);
   body.rotation.x = Math.PI / 2;
@@ -482,7 +489,7 @@ export function makeShip() {
 
   const dome = new THREE.Mesh(
     new THREE.SphereGeometry(0.4, 18, 12),
-    new THREE.MeshStandardMaterial({ color: 0x5ce8ff, roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.92 })
+    new THREE.MeshStandardMaterial({ color: engineCol, roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.92 })
   );
   dome.position.set(0, 0.45, -0.5);
   ship.add(dome);
@@ -499,7 +506,7 @@ export function makeShip() {
     // engine nozzles glow hot for the bloom pass
     const nozzle = new THREE.Mesh(
       new THREE.CylinderGeometry(0.1, 0.14, 0.2, 10),
-      new THREE.MeshStandardMaterial({ color: 0x5ce8ff, emissive: 0x5ce8ff, emissiveIntensity: 3.2 })
+      new THREE.MeshStandardMaterial({ color: engineCol, emissive: engineCol, emissiveIntensity: 3.2 })
     );
     nozzle.rotation.x = Math.PI / 2;
     nozzle.position.set(side * 1.55, 0.0, 0.82);
@@ -515,7 +522,7 @@ export function makeShip() {
   cradle.rotation.x = Math.PI / 2;
   ship.add(cradle);
 
-  const engineGlow = makeGlowSprite(0x5ce8ff, 1.6);
+  const engineGlow = makeGlowSprite(engineCol, 1.6);
   engineGlow.position.z = 1.5;
   ship.add(engineGlow);
   ship.userData.engineGlow = engineGlow;

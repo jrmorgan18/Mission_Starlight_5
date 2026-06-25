@@ -18,7 +18,7 @@ const DEFAULT_PRIZES = [
 // Ship/suit upgrades the cadet buys with ⭐ stars (earned on starbow flights and
 // Energy Catch). Gentle helpers, never required to finish; bought in the Suit Lab.
 export const SUIT_UPGRADES = [
-  { id: 'paint',  icon: '🎨', name: 'Starship Paint',     cost: 6,  desc: 'Give your ship a cool new glow — just for style!' },
+  { id: 'paint',  icon: '🎨', name: 'Starship Paint',     cost: 6,  desc: 'Repaint your whole ship a bold crimson racer — see it everywhere!' },
   { id: 'magnet', icon: '🧲', name: 'Star Magnet',        cost: 10, desc: 'Pull in nearby ⭐ stars during flight.' },
   { id: 'boost',  icon: '⚡', name: 'Ion Boosters',       cost: 12, desc: 'Fly faster when you hold LIGHTSPEED.' },
   { id: 'gloves', icon: '🫧', name: 'Energy Gloves',      cost: 14, desc: 'Energy orbs glow longer — easier to catch.' },

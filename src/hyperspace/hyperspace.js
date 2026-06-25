@@ -108,11 +108,9 @@ export class HyperspaceScene {
     this.ship = makeShip();
     this.scene.add(this.ship);
 
-    // Suit Lab upgrades: Starship Paint recolors the engine glow, Star Magnet
-    // widens the photon pickup radius, Ion Boosters raise the lightspeed cap.
-    if (hasUpgrade('paint') && this.ship.userData.engineGlow) {
-      this.ship.userData.engineGlow.material.color.set(0xff7ad0);
-    }
+    // Suit Lab upgrades: Star Magnet widens the photon pickup radius, Ion
+    // Boosters raise the lightspeed cap. (Starship Paint repaints the whole
+    // ship — handled in makeShip so it shows in every scene.)
     this.grabR = hasUpgrade('magnet') ? 4.6 : 2.4;
     this.boostTop = hasUpgrade('boost') ? 3.6 : 2.8;
 
