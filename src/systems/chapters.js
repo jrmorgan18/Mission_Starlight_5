@@ -10,7 +10,7 @@ import { EarthScene } from '../earth/earthScene.js';
 import { HyperspaceScene } from '../hyperspace/hyperspace.js';
 import { makePulsar, makeDysonSphere } from '../showpieces/cosmic.js';
 import { timeWarp } from '../showpieces/timeclocks.js';
-import { makeAlien, makeLuma, makeArchitect, makeRobot, makeKid, makeRock, makeShip, makeGlowSprite, makeStarfield, makeTree, makeGrassField } from '../world/builders.js';
+import { makeAlien, makeLuma, makeArchitect, makeRobot, makeKid, makeRock, makeShip, makeGlowSprite, makeStarfield, makeTree, makeGrassField, makeCrystal, makeNebulaCloud, makePylon, makeMonolith, makePanelArray } from '../world/builders.js';
 import { sagaStatus } from '../saga.js';
 import * as ui from '../ui/ui.js';
 import { pickMath, pickScience, pickReading } from '../edu/engine.js';
@@ -31,7 +31,40 @@ async function askReadingSet(tag, howMany, opts = {}) {
 function addLuma(scene, x, y, z) { const l = makeLuma(0.85); l.position.set(x, y, z); scene.scene.add(l); return l; }
 function addSky(scene, obj, x, y, z) { obj.position.set(x, y, z); scene.scene.add(obj); return obj; }
 function hideStars(scene) { scene.scene.traverse((o) => { if (o.isPoints) o.visible = false; }); }
-async function openScene(game, key) { const s = new WorldScene(game, key); game.setScene(s); await ui.fade(false); return s; }
+/** Themed set dressing so each world feels finished, not an empty deck. Props
+ *  ring the edges/back so they frame the scene without blocking the play area. */
+function dressScene(scene, key) {
+  const ring = (n, makeFn, rMin = 13, rMax = 22, back = false) => {
+    for (let i = 0; i < n; i++) {
+      const a = back ? (-Math.PI * 0.85 + Math.random() * Math.PI * 0.7) : Math.random() * Math.PI * 2;
+      const d = rMin + Math.random() * (rMax - rMin);
+      const o = makeFn();
+      o.position.set(Math.cos(a) * d, 0, Math.sin(a) * d * 0.7 - 4);
+      o.rotation.y = Math.random() * Math.PI;
+      scene.scene.add(o);
+    }
+  };
+  if (key === 'pulsarsky') {
+    ring(7, () => makePylon(0x5ce8ff, 3 + Math.random() * 2));
+    ring(5, () => makeMonolith(0x3a6ad0, 3 + Math.random() * 2, 1), 16, 24, true);
+    const neb = makeNebulaCloud(0x3a5ab0, 8, 50); neb.position.set(-10, 22, -52); scene.scene.add(neb);
+  } else if (key === 'architect') {
+    ring(6, () => makeMonolith(0x9a7aff, 5 + Math.random() * 3, 1.3), 14, 24, true);
+    ring(8, () => makeCrystal(0xbfa8ff, 1 + Math.random()));
+    ring(4, () => makePylon(0xffd27a, 3));
+    const neb = makeNebulaCloud(0x6a4a9e, 9, 56); neb.position.set(8, 24, -54); scene.scene.add(neb);
+  } else if (key === 'dyson') {
+    ring(6, () => makePanelArray(0x3a5ab0), 12, 22);
+    ring(5, () => makePylon(0xffb24a, 3 + Math.random() * 2));
+    const neb = makeNebulaCloud(0xffb060, 8, 50); neb.position.set(6, 22, -50); scene.scene.add(neb);
+  } else if (key === 'machine') {
+    ring(7, () => makeMonolith(0x5ce8ff, 5 + Math.random() * 4, 1.1), 13, 24, true);
+    ring(6, () => makePylon(0x5ce8ff, 2.5 + Math.random() * 2));
+    const neb = makeNebulaCloud(0x2a7aa0, 8, 52); neb.position.set(-8, 22, -52); scene.scene.add(neb);
+  }
+}
+
+async function openScene(game, key) { const s = new WorldScene(game, key); game.setScene(s); dressScene(s, key); await ui.fade(false); return s; }
 async function closeScene(game, scene) { await ui.fade(true); scene.dispose(); }
 
 /* a quick hyperspace flight (used by chapters that fly themselves) */
@@ -143,11 +176,6 @@ export async function chapterPulsar(game) {
 ============================================================ */
 export async function chapterArchitects(game) {
   const scene = await openScene(game, 'architect');
-  for (let i = 0; i < 6; i++) {
-    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 6, 8), new THREE.MeshStandardMaterial({ color: 0x4a3a7a, emissive: 0x2a2050, emissiveIntensity: 0.5, roughness: 0.5 }));
-    pillar.position.set(-16 + i * 6, 3, -20 - (i % 2) * 6);
-    scene.scene.add(pillar);
-  }
   const arch = makeArchitect();
   scene.place(arch, -3, -2, { id: 'arch', ry: 0.4 });
 
@@ -217,11 +245,6 @@ export async function chapterDyson(game) {
 ============================================================ */
 export async function chapterMachine(game) {
   const scene = await openScene(game, 'machine');
-  for (let i = 0; i < 5; i++) {
-    const tower = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5 + Math.random() * 3, 1.2), new THREE.MeshStandardMaterial({ color: 0x14202c, emissive: 0x0a3040, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.3 }));
-    tower.position.set(-15 + i * 7, 2.5, -22 - (i % 2) * 5);
-    scene.scene.add(tower);
-  }
   const robot = makeRobot(1.1);
   scene.place(robot, -3, -2, { id: 'robot', ry: 0.4 });
   for (let i = 0; i < 3; i++) { const r = makeRobot(0.7); scene.place(r, 6 + i * 2.5, 3 + i, { ry: -0.5 }); }

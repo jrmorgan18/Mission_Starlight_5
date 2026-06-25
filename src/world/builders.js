@@ -260,6 +260,61 @@ const WORLD_RECIPES = {
       hctx.fill();
     }
     heightSpeckle(hctx, w, h, 80, 4, 18, false);
+  },
+  deck(ctx, w, h, hctx) {              // sci-fi station deck — metal panels, glowing seams
+    ctx.fillStyle = '#26324c'; ctx.fillRect(0, 0, w, h);
+    speckle(ctx, w, h, '#2e3c5a', 80, 10, 40, 0.4);
+    const step = 128;
+    ctx.lineWidth = 3;
+    for (let x = 0; x <= w; x += step) { ctx.strokeStyle = '#161e30'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); ctx.strokeStyle = 'rgba(92,232,255,0.5)'; ctx.beginPath(); ctx.moveTo(x + 2, 0); ctx.lineTo(x + 2, h); ctx.stroke(); }
+    for (let y = 0; y <= h; y += step) { ctx.strokeStyle = '#161e30'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); ctx.strokeStyle = 'rgba(92,232,255,0.35)'; ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(w, y + 2); ctx.stroke(); }
+    ctx.fillStyle = '#4a5a7a';   // rivets
+    for (let x = step / 2; x < w; x += step) for (let y = step / 2; y < h; y += step) { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
+    // a couple of hazard-stripe patches
+    for (let k = 0; k < 3; k++) { const px = Math.random() * (w - 200), py = Math.random() * (h - 80); ctx.save(); ctx.translate(px, py); for (let i = 0; i < 6; i++) { ctx.fillStyle = i % 2 ? '#e8c44a' : '#1a1a1a'; ctx.fillRect(i * 30, 0, 30, 60); } ctx.restore(); }
+    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
+    hctx.strokeStyle = '#505050'; hctx.lineWidth = 3;
+    for (let x = 0; x <= w; x += step / 2) { hctx.beginPath(); hctx.moveTo(x, 0); hctx.lineTo(x, h); hctx.stroke(); }
+    for (let y = 0; y <= h; y += step / 2) { hctx.beginPath(); hctx.moveTo(0, y); hctx.lineTo(w, y); hctx.stroke(); }
+  },
+  dysondeck(ctx, w, h, hctx) {         // warm industrial deck near a caged star
+    ctx.fillStyle = '#3a2c18'; ctx.fillRect(0, 0, w, h);
+    speckle(ctx, w, h, '#4a3820', 80, 10, 40, 0.4);
+    const step = 128;
+    ctx.lineWidth = 3;
+    for (let x = 0; x <= w; x += step) { ctx.strokeStyle = '#241a0e'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); ctx.strokeStyle = 'rgba(255,180,80,0.5)'; ctx.beginPath(); ctx.moveTo(x + 2, 0); ctx.lineTo(x + 2, h); ctx.stroke(); }
+    for (let y = 0; y <= h; y += step) { ctx.strokeStyle = '#241a0e'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    // scattered blue solar cells
+    for (let i = 0; i < 40; i++) { ctx.fillStyle = 'rgba(60,100,200,0.7)'; const sx = Math.random() * w, sy = Math.random() * h; ctx.fillRect(sx, sy, 40, 28); ctx.strokeStyle = '#6fa0ff'; ctx.lineWidth = 1; ctx.strokeRect(sx, sy, 40, 28); }
+    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
+    heightSpeckle(hctx, w, h, 60, 4, 14, true);
+  },
+  stone(ctx, w, h, hctx) {             // ancient Architect city — pale stone + glowing runes
+    ctx.fillStyle = '#5a5276'; ctx.fillRect(0, 0, w, h);
+    const step = 170;
+    for (let x = 0; x < w; x += step) for (let y = 0; y < h; y += step) { ctx.fillStyle = `rgba(${90 + Math.random() * 30 | 0},${82 + Math.random() * 26 | 0},${120 + Math.random() * 30 | 0},1)`; ctx.fillRect(x + 3, y + 3, step - 6, step - 6); }
+    speckle(ctx, w, h, '#3e3858', 120, 4, 16, 0.4);
+    // glowing gold rune inlays along some tile borders
+    ctx.strokeStyle = 'rgba(255,210,120,0.8)'; ctx.lineWidth = 3; ctx.shadowColor = '#ffd27a'; ctx.shadowBlur = 8;
+    for (let i = 0; i < 24; i++) { const x = Math.floor(Math.random() * (w / step)) * step + step / 2, y = Math.floor(Math.random() * (h / step)) * step + step / 2; ctx.strokeRect(x - 22, y - 22, 44, 44); }
+    ctx.shadowBlur = 0;
+    hctx.fillStyle = '#808080'; hctx.fillRect(0, 0, w, h);
+    hctx.strokeStyle = '#505050'; hctx.lineWidth = 5;
+    for (let x = 0; x <= w; x += step) { hctx.beginPath(); hctx.moveTo(x, 0); hctx.lineTo(x, h); hctx.stroke(); }
+    for (let y = 0; y <= h; y += step) { hctx.beginPath(); hctx.moveTo(0, y); hctx.lineTo(w, y); hctx.stroke(); }
+  },
+  circuit(ctx, w, h, hctx) {           // Machine Mind — dark floor with glowing circuit traces
+    ctx.fillStyle = '#081420'; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(92,232,255,0.7)'; ctx.lineWidth = 2.5; ctx.shadowColor = '#5ce8ff'; ctx.shadowBlur = 6;
+    for (let i = 0; i < 40; i++) {
+      let x = Math.random() * w, y = Math.random() * h;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      for (let j = 0; j < 5; j++) { if (Math.random() < 0.5) x += (Math.random() - 0.5) * 240; else y += (Math.random() - 0.5) * 240; ctx.lineTo(x, y); }
+      ctx.stroke();
+      ctx.fillStyle = '#aef2ff'; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();   // node
+    }
+    ctx.shadowBlur = 0;
+    hctx.fillStyle = '#707070'; hctx.fillRect(0, 0, w, h);
   }
 };
 
@@ -684,6 +739,54 @@ export function makeAlien(kind) {
   return g;
 }
 
+/** A glowing pylon/antenna — a station light post with a point light. */
+export function makePylon(color = 0x5ce8ff, height = 4) {
+  const g = new THREE.Group();
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.22, height, 8), new THREE.MeshStandardMaterial({ color: 0x2a3450, roughness: 0.4, metalness: 0.7 }));
+  post.position.y = height / 2;
+  g.add(post);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 3 }));
+  lamp.position.y = height + 0.1;
+  g.add(lamp);
+  g.add(makeGlowSprite(color, 2).translateY(height + 0.1));
+  const light = new THREE.PointLight(color, 10, 16);
+  light.position.y = height;
+  g.add(light);
+  return g;
+}
+
+/** A tall glowing monolith/slab — ancient architecture or a data tower. */
+export function makeMonolith(color = 0x9a7aff, height = 6, w = 1.2) {
+  const g = new THREE.Group();
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(w, height, w * 0.6), new THREE.MeshStandardMaterial({ color: 0x2a2440, roughness: 0.5, metalness: 0.4, emissive: color, emissiveIntensity: 0.4 }));
+  slab.position.y = height / 2;
+  g.add(slab);
+  // glowing edge strip
+  const strip = new THREE.Mesh(new THREE.BoxGeometry(w * 0.16, height * 0.8, w * 0.62), new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 2.2 }));
+  strip.position.y = height / 2;
+  g.add(strip);
+  return g;
+}
+
+/** A small solar-panel array on a frame (Dyson set dressing). */
+export function makePanelArray(color = 0x3a5ab0) {
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.12, 1.6), new THREE.MeshStandardMaterial({ color: 0x4a3820, metalness: 0.7, roughness: 0.4 }));
+  frame.position.y = 1.6;
+  frame.rotation.x = -0.5;
+  g.add(frame);
+  for (let i = -1; i <= 1; i++) for (let j = -0.5; j <= 0.5; j += 1) {
+    const cell = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.04, 0.7), new THREE.MeshStandardMaterial({ color, emissive: 0x2a4a8a, emissiveIntensity: 0.6, metalness: 0.6, roughness: 0.2 }));
+    cell.position.set(i * 0.78, 1.66, j * 0.78);
+    cell.rotation.x = -0.5;
+    g.add(cell);
+  }
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1.6, 6), new THREE.MeshStandardMaterial({ color: 0x4a3820, metalness: 0.7 }));
+  pole.position.y = 0.8;
+  g.add(pole);
+  return g;
+}
+
 /** A tall, elegant Architect alien — robed, glowing, ancient. */
 export function makeArchitect() {
   const g = new THREE.Group();
@@ -883,7 +986,7 @@ export function makeLighthouse(height = 7) {
 const GROUND_KEYS = { planet9: 'planet9', proxima: 'proxima', trappist: 'trappist', cancri: 'cancri', pulsar: 'station', finale: 'nebula', blackhole: 'station',
   veyra: 'veyra', observatory: 'station', spaceport: 'station', harbor: 'harbor', race: 'station',
   marsred: 'marsred', marscanyon: 'marsred', marspolar: 'marsred', marsalive: 'meadow',
-  pulsarsky: 'station', architect: 'station', dyson: 'station', machine: 'station', school: 'meadow' };
+  pulsarsky: 'deck', architect: 'stone', dyson: 'dysondeck', machine: 'circuit', school: 'meadow' };
 
 export function makeGround(key, size = 60) {
   const geo = new THREE.PlaneGeometry(size, size, 48, 48);
