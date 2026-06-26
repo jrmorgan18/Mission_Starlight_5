@@ -183,6 +183,7 @@ button { font-family: var(--font); cursor: pointer; border: none; }
   color: var(--glow-gold);
   white-space: nowrap;
   z-index: 19;
+  pointer-events: none;   /* a status banner must never intercept taps on the scene */
   max-width: 56vw; overflow: hidden; text-overflow: ellipsis;
 }
 

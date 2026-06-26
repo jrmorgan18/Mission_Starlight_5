@@ -12,14 +12,17 @@ const EARTH_TEX = 'assets/earth.jpg';
 function makeDamage() {
   const g = new THREE.Group();
   const core = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 10, 8),
+    new THREE.SphereGeometry(0.18, 10, 8),
     new THREE.MeshStandardMaterial({ color: 0xff7a3a, emissive: 0xff4a10, emissiveIntensity: 3 })
   );
   g.add(core);
-  const glow = makeGlowSprite(0xff6a3a, 1.2);
+  const glow = makeGlowSprite(0xff6a3a, 1.3);
   g.add(glow);
-  g.userData = { core, glow, sealed: false };
-  core.userData.marker = g;
+  // a generous invisible hit-sphere so taps near the spark always register
+  const hit = new THREE.Mesh(new THREE.SphereGeometry(0.62, 8, 6), new THREE.MeshBasicMaterial({ visible: false }));
+  g.add(hit);
+  g.userData = { core, glow, hit, sealed: false };
+  hit.userData.marker = g;
   return g;
 }
 
@@ -55,9 +58,9 @@ export class SpaceWalkScene {
     this.ship.position.set(-0.5, 0.2, 0);
     this.scene.add(this.ship);
 
-    // damage points fixed to the hull (children of the ship)
+    // damage points on the camera-facing hull (children of the ship), spread out
     this.markers = [];
-    const spots = [[0.5, 0.5, -0.3], [-0.4, 0.2, 0.7], [1.4, 0.05, 0.4], [-1.4, 0.05, 0.4], [0.1, 0.35, -1.6]];
+    const spots = [[0.35, 0.55, 0.2], [-0.45, 0.3, 0.55], [1.2, 0.05, 0.45], [-1.2, 0.05, 0.45], [0.15, 0.45, -0.5]];
     for (const [x, y, z] of spots) {
       const d = makeDamage();
       d.position.set(x, y, z);
@@ -113,8 +116,8 @@ export class SpaceWalkScene {
     const r = this.game.renderer.domElement.getBoundingClientRect();
     this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     this.raycaster.setFromCamera(this.pointer, this.camera);
-    const cores = this.markers.filter((m) => !m.userData.sealed).map((m) => m.userData.core);
-    const hits = this.raycaster.intersectObjects(cores, false);
+    const targets = this.markers.filter((m) => !m.userData.sealed).map((m) => m.userData.hit);
+    const hits = this.raycaster.intersectObjects(targets, false);
     if (hits.length) this.seal(hits[0].object.userData.marker);
   }
 
