@@ -1,5 +1,5 @@
 /* Mission: Starlight 5 service worker — cache-first so the game works offline after first play. */
-const CACHE = 'starlight5-v12';
+const CACHE = 'starlight5-v13';
 const CORE = [
   '.',
   'index.html',

@@ -4,7 +4,8 @@
 // Earth. Dialogue lines carry stamp:'real'|'magic' for Bolt's fact-checker.
 import * as THREE from 'three';
 import { WorldScene } from './worldScene.js';
-import { echoBlinks, energyCatch, matchPairs, programRobot, spaceWalkRepair, manualLanding, animate } from './minigames.js';
+import { echoBlinks, energyCatch, matchPairs, programRobot, manualLanding, animate } from './minigames.js';
+import { SpaceWalkScene } from '../showpieces/spacewalk.js';
 import { keystoneJigsaw } from './jigsaw.js';
 import { EarthScene } from '../earth/earthScene.js';
 import { HyperspaceScene } from '../hyperspace/hyperspace.js';
@@ -471,19 +472,30 @@ export async function chapterFold(game) {
   // SURPRISE: the fold fried a panel and the autopilot's down — fix her by hand!
   await ui.dialogue([
     { who: 'signal', text: 'WARNING — WARNING — HULL BREACH — AUTOPILOT OFFLINE —' },
-    { who: 'bolt', text: 'RED ALERT! That fold fried a power panel, and we\'re coming in HOT! Cadet — suit up, we have to fix her by hand. Out the airlock — GO!' }
+    { who: 'bolt', text: 'RED ALERT! That fold fried a power panel, and we\'re coming in HOT! Cadet — suit up, you\'re going OUTSIDE. Seal those sparks!' }
   ]);
-  await spaceWalkRepair(game.lowDetail ? 4 : 5);
+  await ui.fade(true);
+  fold.dispose();
+
+  // a real space walk: float outside the ship (Earth behind) and seal the sparks
+  const walk = new SpaceWalkScene(game);
+  game.setScene(walk);
+  game.pipeline.setBloom(0.85, 0.55, 0.6);
+  await ui.fade(false);
+  await walk.run();
   await ui.dialogue([
-    { who: 'luma', text: 'Panel sealed — nice work out there! But the autopilot\'s still down. You\'ll have to land her YOURSELF. Steady hands, Cadet...' }
+    { who: 'luma', text: 'Hull sealed — beautiful work out there, Cadet! But the autopilot\'s still down. You\'ll have to land her YOURSELF. Steady hands...' }
   ]);
+  await ui.fade(true);
+  walk.dispose();
+
+  await game.toBackdrop();
   await manualLanding();
   await ui.dialogue([
     { who: 'bolt', text: 'TOUCHDOWN! Smooth as butter. THAT, Cadet, is how a real pilot comes home. *beep* ...Phew.' }
   ]);
 
   await ui.fade(true);
-  fold.dispose();
 
   // --- school postscript ---
   const scene = await openScene(game, 'school');
