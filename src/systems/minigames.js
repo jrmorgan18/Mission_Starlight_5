@@ -624,48 +624,66 @@ export function energyCatch(target = 8) {
 }
 
 /* ============ Program the Helper Robot (the Machine Mind) ============
-   Write a little program — tap arrow commands to queue a path — then RUN to
-   send the robot across the grid to its power core. A real coding/sequencing
-   puzzle. Wrong path just resets; never fails. */
-export function programRobot() {
+   Write a program — tap arrow commands to queue a path — then RUN to send the
+   robot to its power core. THREE robots to program, each harder: a longer path,
+   a bigger grid, then an obstacle to route around. Wrong path just resets. */
+const PG_DIRS = {
+  right: { dc: 1, dr: 0, icon: '➡️' }, up: { dc: 0, dr: -1, icon: '⬆️' },
+  down: { dc: 0, dr: 1, icon: '⬇️' }, left: { dc: -1, dr: 0, icon: '⬅️' }
+};
+const PG_LEVELS = [
+  { cols: 4, rows: 3, start: { c: 0, r: 2 }, goal: { c: 2, r: 0 }, walls: [], dirs: ['right', 'up'],
+    solution: ['right', 'right', 'up', 'up'] },
+  { cols: 5, rows: 4, start: { c: 0, r: 3 }, goal: { c: 4, r: 0 }, walls: [], dirs: ['right', 'up'],
+    solution: ['right', 'right', 'right', 'right', 'up', 'up', 'up'] },
+  { cols: 5, rows: 5, start: { c: 0, r: 2 }, goal: { c: 4, r: 2 }, walls: [{ c: 2, r: 2 }, { c: 2, r: 3 }], dirs: ['right', 'up', 'down'],
+    solution: ['up', 'right', 'right', 'right', 'down', 'right'] }
+];
+
+function pgLevel(cfg, n, total) {
   return new Promise((resolve) => {
-    const COLS = 4, ROWS = 3;
-    const start = { c: 0, r: 2 }, goal = { c: 2, r: 0 };   // needs →→↑↑ (order-flexible)
+    const { cols, rows, start, goal, walls, dirs, solution } = cfg;
+    const isWall = (c, r) => walls.some((w) => w.c === c && w.r === r);
     let pos = { ...start }, queue = [], running = false;
+    const cellPx = cols >= 5 ? 54 : 64;
 
     const wrap = document.createElement('div');
     wrap.className = 'screen dim';
     wrap.id = 'program-game';
     wrap.innerHTML =
-      '<div class="pg-title">🤖 Program the robot — write its path to the core, then RUN!</div>' +
+      `<div class="pg-round">Robot ${n} of ${total}${n === total ? ' — hardest!' : ''}</div>` +
+      '<div class="pg-title">🤖 Program the path to the core, then RUN!</div>' +
       '<div class="pg-grid"></div>' +
       '<div class="pg-queue"></div>' +
       '<div class="pg-cmds">' +
-      '<button class="pg-cmd" data-d="right">➡️</button>' +
-      '<button class="pg-cmd" data-d="up">⬆️</button>' +
-      '<button class="pg-run">▶ RUN</button>' +
-      '<button class="pg-clear">↺</button>' +
+      dirs.map((d) => `<button class="pg-cmd" data-d="${d}">${PG_DIRS[d].icon}</button>`).join('') +
+      '<button class="pg-run">▶ RUN</button><button class="pg-clear">↺</button>' +
       '</div>';
     document.getElementById('ui').appendChild(wrap);
     const grid = wrap.querySelector('.pg-grid');
     const qEl = wrap.querySelector('.pg-queue');
+    grid.style.gridTemplateColumns = `repeat(${cols}, ${cellPx}px)`;
+    grid.style.gridTemplateRows = `repeat(${rows}, ${cellPx}px)`;
 
     const cells = [];
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       const cell = document.createElement('div');
       cell.className = 'pg-cell';
+      cell.style.width = cell.style.height = `${cellPx}px`;
+      cell.style.fontSize = `${Math.round(cellPx * 0.5)}px`;
       if (c === goal.c && r === goal.r) cell.classList.add('goal');
+      if (isWall(c, r)) cell.classList.add('wall');
       grid.appendChild(cell);
       cells.push(cell);
     }
     const draw = () => {
       cells.forEach((cell, i) => {
-        const c = i % COLS, r = Math.floor(i / COLS);
-        cell.textContent = (c === goal.c && r === goal.r) ? '🔋' : '';
+        const c = i % cols, r = Math.floor(i / cols);
+        cell.textContent = isWall(c, r) ? '🧱' : (c === goal.c && r === goal.r) ? '🔋' : '';
         if (c === pos.c && r === pos.r) cell.textContent = '🤖';
       });
       qEl.innerHTML = '';
-      for (const d of queue) { const chip = document.createElement('span'); chip.className = 'pg-chip'; chip.textContent = d === 'right' ? '➡️' : '⬆️'; qEl.appendChild(chip); }
+      for (const d of queue) { const chip = document.createElement('span'); chip.className = 'pg-chip'; chip.textContent = PG_DIRS[d].icon; qEl.appendChild(chip); }
     };
     draw();
 
@@ -676,20 +694,24 @@ export function programRobot() {
       running = true;
       pos = { ...start }; draw();
       for (const d of queue) {
-        if (d === 'right') pos.c = Math.min(COLS - 1, pos.c + 1);
-        else pos.r = Math.max(0, pos.r - 1);
+        const nc = pos.c + PG_DIRS[d].dc, nr = pos.r + PG_DIRS[d].dr;
+        if (nc >= 0 && nc < cols && nr >= 0 && nr < rows && !isWall(nc, nr)) { pos.c = nc; pos.r = nr; }
         sfx.tap?.(); draw();
-        await animate(320, () => {});
+        await animate(300, () => {});
       }
-      if (pos.c === goal.c && pos.r === goal.r) { sfx.shard?.(); setTimeout(finish, 300); }
-      else { sfx.bump?.(); wrap.querySelector('.pg-title').textContent = 'Beep! Not at the core yet — try again!'; queue = []; pos = { ...start }; setTimeout(() => { draw(); running = false; }, 600); }
+      if (pos.c === goal.c && pos.r === goal.r) { sfx.shard?.(); setTimeout(finish, 350); }
+      else { sfx.bump?.(); wrap.querySelector('.pg-title').textContent = 'Beep! Not at the core — try again!'; queue = []; pos = { ...start }; setTimeout(() => { draw(); running = false; }, 600); }
     };
 
     wrap.querySelectorAll('.pg-cmd').forEach((b) => b.onclick = () => { if (running) return; queue.push(b.dataset.d); sfx.tap?.(); draw(); });
     wrap.querySelector('.pg-clear').onclick = () => { if (running) return; queue = []; pos = { ...start }; sfx.tap?.(); draw(); };
     wrap.querySelector('.pg-run').onclick = run;
-    window.__programSolve = () => { queue = ['right', 'right', 'up', 'up']; run(); };   // test hook
+    window.__programSolve = () => { queue = [...solution]; run(); };   // test hook
   });
+}
+
+export async function programRobot() {
+  for (let i = 0; i < PG_LEVELS.length; i++) await pgLevel(PG_LEVELS[i], i + 1, PG_LEVELS.length);
 }
 
 /* ============ Space Walk Repair (the homecoming malfunction) ============

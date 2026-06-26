@@ -717,10 +717,12 @@ button { font-family: var(--font); cursor: pointer; border: none; }
 .eg-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ffd06a, #ff8a3a); box-shadow: 0 0 16px rgba(255,170,80,0.8); transition: width 0.18s ease; }
 
 /* ---------- Program the Robot (Machine Mind) ---------- */
+.pg-round { font-size: 15px; font-weight: 900; letter-spacing: 1px; color: #ffd95c; text-shadow: 0 0 10px rgba(255,217,92,0.5); }
 .pg-title { font-size: clamp(16px, 3vw, 23px); font-weight: 900; color: #6fe0ff; text-shadow: 0 0 12px rgba(92,232,255,0.5); text-align: center; padding: 0 16px; }
-.pg-grid { display: grid; grid-template-columns: repeat(4, 64px); grid-template-rows: repeat(3, 64px); gap: 6px; margin: 14px 0; }
+.pg-grid { display: grid; gap: 6px; margin: 10px 0; }
 .pg-cell { border: 2px solid rgba(92,232,255,0.35); border-radius: 10px; background: rgba(10,26,40,0.6); display: flex; align-items: center; justify-content: center; font-size: 36px; }
 .pg-cell.goal { border-color: #5cff9d; box-shadow: inset 0 0 14px rgba(92,255,157,0.4); }
+.pg-cell.wall { border-color: rgba(150,90,60,0.6); background: rgba(60,30,20,0.7); }
 .pg-queue { display: flex; gap: 5px; min-height: 34px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: 86vw; }
 .pg-chip { font-size: 24px; }
 .pg-cmds { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
